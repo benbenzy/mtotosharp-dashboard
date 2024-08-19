@@ -1,63 +1,47 @@
-import React from "react";
+'use client';
+import { UserFormPost } from '@/app/types/types.d';
+import UserForm from '@/app/ui/dashboard/users/UserForm';
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+import React, { useState } from 'react';
+import { SubmitHandler } from 'react-hook-form';
 
 function AddUserPage() {
+  const createUser: SubmitHandler<UserFormPost> = (data: any) => {
+    createUserMutation(data);
+  };
+  const {
+    mutate: createUserMutation,
+    isError: createUserError,
+    isPending: createUserProgress,
+    isSuccess: createUserSuccess,
+    error,
+  } = useMutation({
+    mutationFn: async (newUser) => await axios.post('/api/users', newUser),
+  });
+
   return (
     <div>
-      <form action="submit" className="flex flex-col gap-2 items-center">
-        <div className="flex flex-row justify-between p-5 w-full">
-          <input
-            type="text"
-            placeholder="first name"
-            title="first name"
-            className=" bg-slate-700 rounded-md h-10 p-2 w-5/12"
-          />
-          <input
-            type="text"
-            placeholder="last name"
-            title="last name"
-            className=" bg-slate-700 rounded-md h-10 p-2 w-5/12"
-          />
+      {createUserError && (
+        <div className="toast">
+          <div className="alert alert-error">
+            <span>failed to create {error.message}</span>
+          </div>
         </div>
-        <div className="flex flex-row justify-between p-5 w-full">
-          <input
-            type="email"
-            placeholder="email"
-            title="Email"
-            className=" bg-slate-700 rounded-md h-10 p-2 w-5/12"
-          />
-          <input
-            type="phone"
-            placeholder="contact"
-            title="phone number"
-            className=" bg-slate-700 rounded-md h-10 p-2 w-5/12"
-          />
+      )}
+      {createUserProgress && (
+        <progress className="progress bg-slate-100 w-56">
+          creating user
+        </progress>
+      )}
+      {createUserSuccess && (
+        <div className="toast">
+          <div className="alert alert-success">
+            <span>user created </span>
+          </div>
         </div>
-        <div className="flex flex-row justify-between p-5 w-full">
-          <input
-            type="text"
-            placeholder="address"
-            title="Address"
-            className=" bg-slate-700 rounded-md h-10 p-2 w-5/12"
-          />
-          <select
-            name="role"
-            id=""
-            className=" bg-slate-700 rounded-md h-10 p-2 w-5/12">
-            <option value="select role">select role</option>
-            <option value="admin">admin</option>
-            <option value="admin">author</option>
-            <option value="admin">editor</option>
-            <option value="admin">customer support</option>
-            <option value="admin">marketter</option>
-            <option value="admin">sales</option>
-          </select>
-        </div>
-        <button
-          type="submit"
-          className="p-2 w-full items-center bg-slate-600 rounded-lg border-none">
-          Submit
-        </button>
-      </form>
+      )}
+      <UserForm isEditting={false} submit={createUser} />
     </div>
   );
 }

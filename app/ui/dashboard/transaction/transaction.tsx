@@ -1,38 +1,28 @@
-import Image from "next/image";
-import React from "react";
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import Image from 'next/image';
+import React from 'react';
+
+interface transaction {
+  id: string;
+  created_at: Date;
+  amount: string;
+  status: string;
+  user_id: string;
+}
 
 function Transaction() {
-  const transactions = [
-    {
-      id: 1,
-      amount: 2000,
-      status: "success",
-      date: "sun feb 22 2023",
-      name: "mary johnson",
+  const {
+    data: transactions,
+    isLoading: transactionsLoading,
+    isError: tranactionsError,
+  } = useQuery<transaction[]>({
+    queryKey: ['courses'],
+    queryFn: async () => {
+      const res = await axios.get('/api/transactions');
+      return res.data;
     },
-    {
-      id: 2,
-      amount: 6000,
-      status: "pending",
-      date: "mon feb 23 2023",
-      name: "johnson luke",
-    },
-
-    {
-      id: 4,
-      amount: 300,
-      status: "reversed",
-      date: "sun feb 22 2023",
-      name: "lydiah chep",
-    },
-    {
-      id: 5,
-      amount: 900,
-      status: "cancelled",
-      date: "sun feb 22 2023",
-      name: "kipkirui",
-    },
-  ];
+  });
   return (
     <div>
       <div className="flex flex-row justify-between items-center">
@@ -51,30 +41,33 @@ function Transaction() {
           </tr>
         </thead>
         <tbody>
-          {transactions.map((item, index) => (
+          {transactions?.map((item, index) => (
             <tr key={index} className="mt-2">
               <td className="flex flex-row gap-2 p-2 items-center">
                 <Image
                   height={30}
                   width={30}
                   alt=""
-                  src={"/noavatar.png"}
+                  src={'/noavatar.png'}
                   className="rounded-full object-cover"
                 />
-                {item.name}
+                {item.user_id}
               </td>
-              <td className="p-2">{item.date}</td>
+              <td className="p-2">
+                {new Date(item.created_at).toDateString()}
+              </td>
               <td className="p-2">{item.amount.toLocaleString()}</td>
               <td
                 className={` font-medium p-2 ${
-                  item.status === "pending"
-                    ? "text-yellow-600"
-                    : item.status === "success"
-                    ? "text-lime-600"
-                    : item.status === "reversed"
-                    ? "text-gray-400"
-                    : "text-red-600"
-                }`}>
+                  item.status === 'pending'
+                    ? 'text-yellow-600'
+                    : item.status === 'success'
+                    ? 'text-lime-600'
+                    : item.status === 'reversed'
+                    ? 'text-gray-400'
+                    : 'text-red-600'
+                }`}
+              >
                 {item.status}
               </td>
             </tr>

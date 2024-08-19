@@ -1,102 +1,223 @@
-import Pagination from "@/app/ui/dashboard/pagination/pagination";
-import Search from "@/app/ui/dashboard/search/search";
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
-import { MdMore } from "react-icons/md";
+'use client';
+import Pagination from '@/app/ui/dashboard/pagination/pagination';
+import RemoteImage from '@/app/ui/dashboard/remoteImage/RemoteImage';
+import Search from '@/app/ui/dashboard/search/search';
+import prisma from '@/prisma';
+import { Course } from '@prisma/client';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import Link from 'next/link';
+import React, { useState } from 'react';
+import {
+  MdAnalytics,
+  MdArrowDownward,
+  MdArrowDropDownCircle,
+  MdArrowForward,
+  MdArrowForwardIos,
+  MdCheckBox,
+  MdCheckCircleOutline,
+  MdDelete,
+  MdDoDisturb,
+  MdEdit,
+  MdIncompleteCircle,
+  MdMore,
+  MdMoreHoriz,
+  MdMoreVert,
+  MdMoveDown,
+  MdNote,
+  MdNoteAdd,
+  MdRemoveRedEye,
+} from 'react-icons/md';
 
 function ProductsPage() {
-  const products = [
-    {
-      id: 6,
-      title: "mary ben",
-      author: "mary@gmaiil.com",
-      createdAt: "jun 05 2024",
-      status: "published",
+  const [activeIndex, setActiveIndex] = useState('');
+
+  const {
+    data: courses,
+    isLoading,
+    isError,
+  } = useQuery<Course[]>({
+    queryKey: ['courses'],
+    queryFn: async () => {
+      const res = await axios.get('/api/courses');
+      return res.data;
     },
-    {
-      id: 5,
-      title: "mary ben",
-      author: "mary@gmaiil.com",
-      createdAt: "jun 05 2024",
-      status: "published",
+  });
+
+  async function handleDeleteCourse(id: string) {
+    try {
+      deleteCourse();
+      setActiveIndex('');
+    } catch (error) {
+      console.log('error refetching', error);
+    }
+  }
+
+  const {
+    mutate: deleteCourse,
+    isError: deleteCorseError,
+    isPending: deleteCoursePending,
+    isSuccess: deleteCourseSucces,
+  } = useMutation({
+    mutationFn: async (id) => {
+      await axios.delete(`/api/products/${id}`);
     },
-    {
-      id: 1,
-      title: "mary ben",
-      author: "mary@gmaiil.com",
-      createdAt: "jun 05 2024",
-      status: "pending",
-    },
-    {
-      id: 2,
-      title: "mary ben",
-      author: "mary@gmaiil.com",
-      createdAt: "jun 05 2024",
-      status: "inreview",
-    },
-    {
-      id: 3,
-      title: "mary ben",
-      author: "mary@gmaiil.com",
-      createdAt: "jun 05 2024",
-      status: "rejected",
-    },
-    {
-      id: 4,
-      title: "mary ben",
-      author: "mary@gmaiil.com",
-      createdAt: "jun 05 2024",
-      status: "published",
-    },
-  ];
+  });
   return (
     <div className="bg-slate-800 rounded-md p-5 mt-5">
       <div className="flex flex-row items-center justify-between">
-        <Search placeholder="search user by email/id" />
-        <Link href={"/dashboard/products/add"}>
+        <Search placeholder="search plan by id" />
+        <Link href={'/dashboard/products/add'}>
           <button className="p-2 bg-slate-700 hover:bg-slate-500 cursor-pointer rounded-md text-slate-200 border-none">
-            New challenge
+            New project
           </button>
         </Link>
       </div>
-      <table className="bg-gray-600 rounded-md  w-full mt-5 p-4">
+      {isLoading && <div>loading ...</div>}
+      {isError && <div> error loading</div>}
+      {deleteCorseError && (
+        <div className="toast">
+          <div className="alert alert-error">
+            <span>failed to delete item</span>
+          </div>
+        </div>
+      )}
+      {deleteCoursePending && (
+        <progress className="progress w-56">processing delete...</progress>
+      )}
+      {deleteCourseSucces && (
+        <div className="toast">
+          <div className="alert alert-success">
+            <span>course deleted</span>
+          </div>
+        </div>
+      )}
+      <table className="bg-gray-600 rounded-md  w-full mt-5 p-4 border-collapse table-auto border-spacing-2">
         <thead>
           <tr>
-            <td className="p-2">id</td>
-
-            <td>title</td>
-            <td>author</td>
-            <td>Created At</td>
+            <td>Course</td>
+            <td>description</td>
 
             <td>Status</td>
+            <td>Editor</td>
+
+            <td>Price</td>
             <td>Action</td>
           </tr>
         </thead>
         <tbody>
-          {products.map((item, index) => (
-            <tr key={item.id} className="m-5">
-              <td className="p-2">{item.id}</td>
-              <td className="capitalize">{item.title}</td>
-              <td>{item.author}</td>
-              <td>{item.createdAt}</td>
+          {courses?.map((item) => (
+            <tr key={item?.id} className="m-5 hover  border border-slate-100">
+              <td className="w-32">
+                <div className="flex items-center gap-3">
+                  <RemoteImage
+                    size={0}
+                    className="h-16 w-28 object-cover rounded-md"
+                    fallback={'/noproduct.jpg'}
+                    bucket="course_thumbnails"
+                    path={item?.thumbnail}
+                  />
+                </div>
+              </td>
+              <td className="w-1/3">
+                {' '}
+                <div className="flex flex-col gap-1 ">
+                  <div className="flex flex-row justify-between">
+                    <h3 className="text-lg">{item?.title}</h3>{' '}
+                    {activeIndex === item.id ? (
+                      <MdArrowForwardIos
+                        size={24}
+                        className=" hover:bg-gray-300 rounded-full"
+                        onClick={() =>
+                          activeIndex === item.id
+                            ? setActiveIndex('')
+                            : setActiveIndex(item?.id)
+                        }
+                      />
+                    ) : (
+                      <MdArrowDropDownCircle
+                        size={24}
+                        className=" hover:bg-gray-300 rounded-full"
+                        onClick={() =>
+                          activeIndex === item.id
+                            ? setActiveIndex('')
+                            : setActiveIndex(item?.id)
+                        }
+                      />
+                    )}
+                  </div>
 
-              <td
-                className={`${
-                  item.status === "published"
-                    ? "text-lime-600"
-                    : item.status === "pending"
-                    ? "text-gray-400"
-                    : item.status === "inreview"
-                    ? "text-yellow-600"
-                    : "text-red-600"
-                }`}>
-                {item.status}
+                  <p className=" text-sm line-clamp-2">{item?.description}</p>
+
+                  {activeIndex === item.id && (
+                    <div className="flex flex-row justify-between items-center">
+                      <Link
+                        href={`/dashboard/products/${item.id}`}
+                        className="hover:bg-slate-400 rounded-full h-10 w-10"
+                      >
+                        <MdEdit size={24} className="self-center" />
+                      </Link>
+                      <Link
+                        href={`/dashboard/products/${item.id}`}
+                        className="hover:bg-slate-400 rounded-full  h-10 w-10"
+                      >
+                        <MdAnalytics size={24} />
+                      </Link>
+                      <Link
+                        href={`/dashboard/products/${item.id}`}
+                        className="hover:bg-slate-400 rounded-full  h-10 w-10"
+                      >
+                        <MdRemoveRedEye size={24} />
+                      </Link>
+                      <button className="hover:bg-slate-400 rounded-full  h-10 w-10">
+                        <MdDelete
+                          size={24}
+                          onClick={() => {
+                            let text = 'confirm delete';
+                            if (confirm(text) == true) {
+                              handleDeleteCourse(item.id);
+                            } else {
+                              text = 'You canceled!';
+                            }
+                          }}
+                        />
+                      </button>
+                      <button className="hover:bg-slate-400 rounded-full h-10 w-10">
+                        <MdMoreHoriz size={24} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </td>
+
+              <td>
+                <div className=" flex flex-col gap-2">
+                  <span className="">
+                    {new Date(item?.created_at).toDateString()}
+                  </span>
+                  <span className="text-yellow-500 h-5 w-full rounded-lg self-center">
+                    {item.status}
+                  </span>
+                </div>
               </td>
               <td>
-                <button className="cursor-pointer ">
-                  <MdMore size={25} />
-                </button>
+                <div className=" flex flex-col gap-2">
+                  <span className="">{item?.editor}</span>
+                  <span className="text-yellow-500 h-5 w-full rounded-lg self-center">
+                    {item?.editor_status}
+                  </span>
+                </div>
+              </td>
+              <td>{item.price}</td>
+              <td>
+                <MdMoreVert
+                  size={25}
+                  onClick={() =>
+                    activeIndex === item.id
+                      ? setActiveIndex('')
+                      : setActiveIndex(item.id)
+                  }
+                />
               </td>
             </tr>
           ))}

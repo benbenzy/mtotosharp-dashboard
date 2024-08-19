@@ -1,98 +1,242 @@
-import React from "react";
-import Image from "next/image";
+'use client';
+import React, { useEffect, useRef, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'next/navigation';
+import axios from 'axios';
+import { createClient } from '@/utils/supabase/client';
+import { UserRoles } from '@prisma/client';
+import RemoteImage from '@/app/ui/dashboard/remoteImage/RemoteImage';
+export interface UserProps {
+  id: string;
+  full_name: string;
+  email: string;
+  phone: string;
+  created_at?: Date | undefined;
+  group: string;
+  avatar_url: string;
+  isMember: boolean;
+  isActive: boolean;
+}
 
 function SingleUserPage() {
+  const supabase = createClient();
+  const searchParams = useSearchParams();
+  const userId = searchParams.get('id');
+  const [image, setImage] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+
+  const [user, setUser] = useState<UserProps>({
+    id: '',
+    full_name: '',
+    email: '',
+    phone: '',
+    group: '',
+    avatar_url: '',
+    isMember: false,
+    isActive: false,
+  });
+  const imageRef = useRef(null);
+  const { data: UserData } = useQuery({
+    queryKey: ['getUser'],
+    queryFn: async () => {
+      const user = await axios.get(`/api/users/${userId}`);
+      return user.data;
+    },
+  });
+  useEffect(() => {
+    setUser(UserData);
+  }, [UserData]);
+
+  async function uploadImage(image: any) {
+    setUploading(true);
+    const fileExt = image?.name?.split('.').pop();
+    const filePath = `${user?.id}-${Math.random()}.${fileExt}`;
+    if (!user.avatar_url) {
+      const { error, data } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, image);
+      if (error) {
+        setImage(null);
+        setUploading(false);
+        console.log('failed get bucket', error);
+      }
+      if (!error) {
+        const { data: userData, error: userError } = await supabase
+          .from('profiles')
+          .update({ avatar_url: data.path })
+          .eq('id', userId);
+        console.log('updated');
+        setImage(null);
+        setUploading(false);
+        if (userError) {
+          setImage(null);
+          setUploading(false);
+          console.log('failed to update user', userError);
+        }
+      }
+    } else {
+      const { error, data } = await supabase.storage
+        .from('avatars')
+        .update(user.avatar_url, image);
+      if (!error) {
+        const { data: userData, error: userError } = await supabase
+          .from('profiles')
+          .update({ avatar_url: data.path })
+          .eq('id', userId);
+        setImage(null);
+        setUploading(false);
+        console.log('updated', userData);
+        if (userError) {
+          setImage(null);
+          setUploading(false);
+          console.log('failed to update user', userError);
+        }
+      }
+    }
+  }
+
   return (
-    <div className="flex flex-row gap-8">
-      <div className="flex flex-col w-2/5 mt-5 bg-slate-800 p-5">
-        <div className="w-full h-3/4 mb-5 overflow-hidden rounded-md relative">
-          <Image alt="" src={"/noavatar.png"} fill />
+    <div>
+      <div className="flex flex-row gap-8">
+        <div className="flex flex-col w-2/5 mt-5 bg-slate-800 p-5">
+          <div className="w-full h-3/4 mb-5 overflow-hidden rounded-md relative">
+            <RemoteImage
+              onClick={() => imageRef?.current?.click()}
+              fill={true}
+              path={user?.avatar_url}
+              size={200}
+              fallback="/noavatar.png"
+              bucket="avatars"
+              alt="/noavatar.png"
+              style={'max-w-48 max-h-70 rounded-lg'}
+              uploadImage={image}
+              cancelled={!image}
+            />
+          </div>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImage(e?.target?.files[0])}
+            ref={imageRef}
+            hidden
+          />
+          {image && (
+            <div>
+              {uploading ? (
+                <div className="bg-green-500">uploading...</div>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  <button
+                    className="bg-green-500"
+                    onClick={() => uploadImage(image)}
+                  >
+                    upload
+                  </button>
+                  <button
+                    className="bg-slate-400"
+                    onClick={() => {
+                      setImage(null);
+                    }}
+                  >
+                    cancel
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+          <div>
+            <div>Name: {UserData?.full_name}</div>
+            <div>Email: {UserData?.email}</div>
+            <div>Phone: {UserData?.phone}</div>
+            <div>Role: {UserData?.group}</div>
+          </div>
         </div>
-        ben benzy
+        <div className=" flex-1 gap-2 mt-2 rounded-md bg-slate-800">
+          <form action="" className="flex flex-col">
+            <label htmlFor="lastName" className="mt-5 font-semibold capitalize">
+              {' '}
+              Name
+            </label>
+            <input
+              className="bg-slate-600 p-2 rounded-md text-slate-50"
+              value={user?.full_name}
+              onChange={(e) => setUser({ ...user, full_name: e.target.value })}
+              type="text"
+              placeholder="lastName"
+              name="lastName"
+            />
+            <label htmlFor="email" className="mt-2 font-semibold capitalize">
+              Email
+            </label>
+            <input
+              className="bg-slate-600 p-2 rounded-md text-slate-50"
+              type="email"
+              value={user?.email}
+              onChange={(e) => setUser({ ...user, email: e.target.value })}
+              name="email"
+            />
+            <label htmlFor="email" className="mt-2 font-semibold capitalize">
+              {' '}
+              Phone
+            </label>
+            <input
+              className="bg-slate-600 p-2 rounded-md text-slate-50"
+              type="tel"
+              value={user?.phone}
+              onChange={(e) => setUser({ ...user, phone: e.target.value })}
+              name="phone"
+            />
+
+            <label htmlFor="email" className="mt-2 font-semibold capitalize">
+              {' '}
+              Role
+            </label>
+            <select
+              name="role"
+              id=""
+              value={user?.group}
+              onChange={(e) => setUser({ ...user, group: e.target.value })}
+              className="bg-slate-600 p-2 rounded-md text-slate-50"
+            >
+              <option value={UserRoles.ADMIN}>ADMIN</option>
+              <option value={UserRoles.AUTHOR}>AUTHOR</option>
+              <option value={UserRoles.CUSTOMER_SUPPORT}>SUPPORT</option>
+              <option value={UserRoles.MARKETTING}>MARKETTING</option>
+              <option value={UserRoles.SALES}>SALES</option>
+              <option value={UserRoles.FINANCE}>FINANCE</option>
+              <option value={UserRoles.RESEARCH}> RESEARCH</option>
+              <option value={UserRoles.PUBLISHERS}>PUBLISHERS</option>
+              <option value={UserRoles.EDITOR}>EDITOR</option>
+              <option value={UserRoles.EDITOR}>AGENT</option>
+            </select>
+            <label htmlFor="email" className="mt-2 font-semibold capitalize">
+              {' '}
+              status
+            </label>
+
+            <select
+              name="status"
+              id=""
+              onChange={(e) =>
+                setUser({
+                  ...user,
+                  isActive: e.target.value,
+                })
+              }
+              value={user?.isActive}
+              className="bg-slate-600 p-2 rounded-md text-slate-50"
+            >
+              <option value={true}>active</option>
+              <option value={false}>block</option>
+            </select>
+            <button className="w-full bg-green-900 rounded-md mt-5 p-2">
+              update
+            </button>
+          </form>
+        </div>
       </div>
-      <div className=" flex-1 gap-2 mt-2 rounded-md bg-slate-800">
-        <form action="" className="flex flex-col">
-          <label htmlFor="firstName" className="mt-5 font-semibold capitalize">
-            {" "}
-            first Name
-          </label>
-          <input
-            type="text"
-            placeholder="first name"
-            name="first name"
-            className="bg-slate-600 p-2 rounded-md text-slate-50"
-          />
-          <label htmlFor="lastName" className="mt-5 font-semibold capitalize">
-            {" "}
-            last Name
-          </label>
-          <input
-            className="bg-slate-600 p-2 rounded-md text-slate-50"
-            type="text"
-            placeholder="lastName"
-            name="lastName"
-          />
-          <label htmlFor="email" className="mt-2 font-semibold capitalize">
-            {" "}
-            Email
-          </label>
-          <input
-            className="bg-slate-600 p-2 rounded-md text-slate-50"
-            type="email"
-            placeholder="johndoe@gmail.com"
-            name="email"
-          />
-          <label htmlFor="email" className="mt-2 font-semibold capitalize">
-            {" "}
-            Phone
-          </label>
-          <input
-            className="bg-slate-600 p-2 rounded-md text-slate-50"
-            type="contact"
-            placeholder="+254710000000"
-            name="phone"
-          />
-          <label htmlFor="email" className="mt-2 font-semibold capitalize">
-            {" "}
-            Address
-          </label>
-          <input
-            className="bg-slate-600 p-2 rounded-md text-slate-50"
-            type="text"
-            placeholder="nairobi"
-            name="address"
-          />
-          <label htmlFor="email" className="mt-2 font-semibold capitalize">
-            {" "}
-            Role
-          </label>
-          <select
-            name="role"
-            id=""
-            className="bg-slate-600 p-2 rounded-md text-slate-50">
-            <option value="">admin</option>
-            <option value="">support</option>
-            <option value="">marketting</option>
-            <option value="">author</option>
-            <option value="">sales</option>
-          </select>
-          <label htmlFor="email" className="mt-2 font-semibold capitalize">
-            {" "}
-            status
-          </label>
-          <select
-            name="status"
-            id=""
-            className="bg-slate-600 p-2 rounded-md text-slate-50">
-            <option value="">active</option>
-            <option value="">blocked</option>
-            <option value="">disabled</option>
-            <option value="">suspended</option>
-          </select>
-          <button className="w-full bg-green-900 rounded-md mt-5 p-2">
-            update
-          </button>
-        </form>
+      <div>
+        <h1>Wallet</h1>
       </div>
     </div>
   );

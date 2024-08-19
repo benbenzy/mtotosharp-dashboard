@@ -5,7 +5,7 @@ interface props {
 
 function Pagination({ page }: props) {
   return (
-    <div className="flex flex-row justify-between items-center w-full p-2 ">
+    <div className="flex flex-row justify-between items-center w-full mt-5 ">
       <button
         className={`p-1 bg-slate-600 rounded-md hover:bg-slate-400 
           

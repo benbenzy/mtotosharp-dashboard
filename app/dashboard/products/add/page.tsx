@@ -1,45 +1,49 @@
-import React from "react";
+'use client';
+
+import React from 'react';
+import axios from 'axios';
+import { useMutation } from '@tanstack/react-query';
+import { SubmitHandler } from 'react-hook-form';
+import CoursesForm from '@/app/ui/dashboard/courses/CoursesForm';
+import { CourseFormPost } from '@/app/types/types.d';
 
 function AddProductspage() {
-  return (
-    <div className="bg-slate-800 p-20 mt-5 rounded-md">
-      <form action="" className="flex flex-wrap justify-between ">
-        <input
-          type="text"
-          placeholder="title"
-          required
-          name="title"
-          className=" w-11s"
-        />
-        <input type="number" name="prize" placeholder="prize" />
-        <input type="number" name="size" placeholder="size" />
-        <select
-          name="category"
-          id="cat"
-          className="p-5 bg-transparent rounded-md text-slate-500 mb-5">
-          <option value="general">choose user category</option>
-          <option value="customer suppoort">customer support</option>
-          <option value="authors">authors</option>
-          <option value="editors">editors</option>
-          <option value="sales">sales</option>
-          <option value="marketting">marketting</option>
-          <option value="agents">agents</option>
-          <option value="publishers">publishers</option>
-          <option value="sysytem support">system support</option>
-        </select>
+  const handleCreateCourse: SubmitHandler<CourseFormPost> = (data: any) => {
+    createCourse(data);
+  };
 
-        <textarea
-          name="description"
-          id="description"
-          title="description"
-          placeholder="description"
-          rows={10}></textarea>
-        <button
-          type="submit"
-          className="p-5 w-full bg-blue-300 rounded-lg border-none">
-          Submit
-        </button>
-      </form>
+  const {
+    mutate: createCourse,
+    isError: createCourseError,
+    isPending: createCourseProgress,
+    isSuccess: createCourseSuccess,
+    error,
+  } = useMutation({
+    mutationFn: async (newPlan) => {
+      await axios.post('/api/courses', newPlan);
+    },
+  });
+
+  return (
+    <div className="bg-slate-800">
+      {createCourseError && (
+        <div className="toast">
+          <div className="alert alert-error">
+            <span>failed to create {error.message}</span>
+          </div>
+        </div>
+      )}
+      {createCourseProgress && (
+        <progress className="progress w-56">creating course</progress>
+      )}
+      {createCourseSuccess && (
+        <div className="toast">
+          <div className="alert alert-success">
+            <span>plan created </span>
+          </div>
+        </div>
+      )}
+      <CoursesForm submit={handleCreateCourse} isEditting={false} />
     </div>
   );
 }
