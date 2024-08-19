@@ -1,49 +1,49 @@
-import Pagination from "@/app/ui/dashboard/pagination/pagination";
-import Search from "@/app/ui/dashboard/search/search";
-import Link from "next/link";
-import React from "react";
-import { MdMore } from "react-icons/md";
+import Pagination from '@/app/ui/dashboard/pagination/pagination';
+import Search from '@/app/ui/dashboard/search/search';
+import Link from 'next/link';
+import React, { Suspense } from 'react';
+import { MdMore } from 'react-icons/md';
 
 const data = [
   {
-    firstName: "hello me",
-    lastName: "jane",
-    id: "1",
-    team: "marketting",
-    email: "marybenbenzy@gai.com",
-    phone: "25471040703",
+    firstName: 'hello me',
+    lastName: 'jane',
+    id: '1',
+    team: 'marketting',
+    email: 'marybenbenzy@gai.com',
+    phone: '25471040703',
   },
   {
-    firstName: "hello me",
-    lastName: "jane",
-    id: "2",
-    team: "marketting",
-    email: "marybenbenzy@gai.com",
-    phone: "25471040703",
+    firstName: 'hello me',
+    lastName: 'jane',
+    id: '2',
+    team: 'marketting',
+    email: 'marybenbenzy@gai.com',
+    phone: '25471040703',
   },
   {
-    firstName: "hello me",
-    lastName: "jane",
-    id: "3",
-    team: "marketting",
-    email: "marybenbenzy@gai.com",
-    phone: "25471040703",
+    firstName: 'hello me',
+    lastName: 'jane',
+    id: '3',
+    team: 'marketting',
+    email: 'marybenbenzy@gai.com',
+    phone: '25471040703',
   },
   {
-    firstName: "hello me",
-    lastName: "jane",
-    id: "4",
-    team: "marketting",
-    email: "marybenbenzy@gai.com",
-    phone: "25471040703",
+    firstName: 'hello me',
+    lastName: 'jane',
+    id: '4',
+    team: 'marketting',
+    email: 'marybenbenzy@gai.com',
+    phone: '25471040703',
   },
   {
-    firstName: "hello me",
-    lastName: "jane",
-    id: "5",
-    team: "marketting",
-    email: "marybenbenzy@gai.com",
-    phone: "25471040703",
+    firstName: 'hello me',
+    lastName: 'jane',
+    id: '5',
+    team: 'marketting',
+    email: 'marybenbenzy@gai.com',
+    phone: '25471040703',
   },
 ];
 
@@ -51,8 +51,10 @@ function EmployeesPage() {
   return (
     <div className="bg-slate-800 rounded-md p-5 mt-5">
       <div className="flex flex-row items-center justify-between">
-        <Search placeholder="search by id" />
-        <Link href={"/dashboard/users/add"}>
+        <Suspense>
+          <Search placeholder="search by id" />
+        </Suspense>
+        <Link href={'/dashboard/users/add'}>
           <button className="p-2 bg-slate-700 hover:bg-slate-500 cursor-pointer rounded-md text-slate-200 border-none">
             Add New
           </button>
@@ -61,7 +63,7 @@ function EmployeesPage() {
       <table className="bg-gray-600 rounded-md  w-full mt-5">
         <thead>
           <tr>
-            {" "}
+            {' '}
             <td>ID</td>
             <td>firstName</td>
             <td>lastName</td>
