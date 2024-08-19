@@ -21,7 +21,7 @@ function SingleUserPage() {
   const supabase = createClient();
   const searchParams = useSearchParams();
   const userId = searchParams.get('id');
-  const [image, setImage] = useState<File | null>(null);
+  const [image, setImage] = useState<File | null | any>(null);
   const [uploading, setUploading] = useState(false);
 
   const [user, setUser] = useState<UserProps>({
@@ -34,7 +34,7 @@ function SingleUserPage() {
     isMember: false,
     isActive: false,
   });
-  const imageRef = useRef(null);
+  const imageRef = useRef<any>(null);
   const { data: UserData } = useQuery({
     queryKey: ['getUser'],
     queryFn: async () => {
@@ -115,7 +115,7 @@ function SingleUserPage() {
           <input
             type="file"
             accept="image/*"
-            onChange={(e) => setImage(e?.target?.files[0])}
+            onChange={(e: any) => setImage(e?.target?.files[0])}
             ref={imageRef}
             hidden
           />
@@ -197,16 +197,16 @@ function SingleUserPage() {
               onChange={(e) => setUser({ ...user, group: e.target.value })}
               className="bg-slate-600 p-2 rounded-md text-slate-50"
             >
-              <option value={UserRoles.ADMIN}>ADMIN</option>
-              <option value={UserRoles.AUTHOR}>AUTHOR</option>
-              <option value={UserRoles.CUSTOMER_SUPPORT}>SUPPORT</option>
-              <option value={UserRoles.MARKETTING}>MARKETTING</option>
-              <option value={UserRoles.SALES}>SALES</option>
-              <option value={UserRoles.FINANCE}>FINANCE</option>
-              <option value={UserRoles.RESEARCH}> RESEARCH</option>
-              <option value={UserRoles.PUBLISHERS}>PUBLISHERS</option>
-              <option value={UserRoles.EDITOR}>EDITOR</option>
-              <option value={UserRoles.EDITOR}>AGENT</option>
+              <option value={'ADMIN'}>ADMIN</option>
+              <option value={'AUTHOR'}>AUTHOR</option>
+              <option value={'CUSTOMER_SUPPORT'}>SUPPORT</option>
+              <option value={'MARKETTING'}>MARKETTING</option>
+              <option value={'SALES'}>SALES</option>
+              <option value={'FINANCE'}>FINANCE</option>
+              <option value={'RESEARCH'}> RESEARCH</option>
+              <option value={'PUBLISHERS'}>PUBLISHERS</option>
+              <option value={'EDITOR'}>EDITOR</option>
+              <option value={'AGENT'}>AGENT</option>
             </select>
             <label htmlFor="email" className="mt-2 font-semibold capitalize">
               {' '}
@@ -216,17 +216,16 @@ function SingleUserPage() {
             <select
               name="status"
               id=""
-              onChange={(e) =>
+              onChange={(e: any) =>
                 setUser({
                   ...user,
                   isActive: e.target.value,
                 })
               }
-              value={user?.isActive}
               className="bg-slate-600 p-2 rounded-md text-slate-50"
             >
-              <option value={true}>active</option>
-              <option value={false}>block</option>
+              <option>active</option>
+              <option>block</option>
             </select>
             <button className="w-full bg-green-900 rounded-md mt-5 p-2">
               update

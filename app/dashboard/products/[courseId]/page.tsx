@@ -26,12 +26,12 @@ interface CourseDetailsProps {
 
 const CourseDeatilsPage: FC<CourseDetailsProps> = ({ params }) => {
   const supabase = createClient();
-  const [image, setImage] = useState<File | null>(null);
-  const [course, setCourse] = useState();
+  const [image, setImage] = useState<File | any>(null);
+  const [course, setCourse] = useState<any>();
   const [onEdit, setOnEdit] = useState(false);
   const [selectedChapter, setSelectedChapter] = useState('');
   const [uploading, setUploading] = useState(false);
-  const imageRef = useRef();
+  const imageRef = useRef<any>();
 
   const { data } = useQuery({
     queryKey: ['course', params?.courseId],
@@ -232,7 +232,7 @@ const CourseDeatilsPage: FC<CourseDetailsProps> = ({ params }) => {
             type="file"
             accept="image/*"
             className="hidden"
-            onChange={(e) => setImage(e.target.files[0])}
+            onChange={(e: any) => setImage(e.target.files[0])}
             ref={imageRef}
           />
           {image && (
@@ -348,7 +348,7 @@ const CourseDeatilsPage: FC<CourseDetailsProps> = ({ params }) => {
           </tr>
         </thead>
         <tbody>
-          {course?.chapters?.map((item, index) => (
+          {course?.chapters?.map((item: any, index: Number) => (
             <tr key={item.id}>
               <td>
                 <div>{item?.title}</div>

@@ -31,22 +31,15 @@ const NewChapterPage = () => {
   const chapterId = searchParams.get('chapterId');
   const requestType = searchParams.get('requestType');
   const [selectedChapter, setSelectedChapter] = useState('');
-  const { register, handleSubmit } = useForm<ChapterFormPost>();
-  const [chapter, setChapter] = useState({
+  const { register, handleSubmit } = useForm<ChapterFormPost | any>();
+  const [chapter, setChapter] = useState<any>({
     id: '',
     title: '',
     content: '',
     courseID: '',
+    sub_topis: [],
   });
-  // const { data: courseChapter } = useQuery<Chapter>({
-  //   queryKey: ['courseChapter', courseId],
-  //   queryFn: async () => {
-  //     const res = await axios.get(
-  //       `/api/courses/${courseId}/chapters/${chapterId}`
-  //     );
-  //     return res.data;
-  //   },
-  // });
+
   useEffect(() => {
     const unsub = async () => {
       if (requestType === 'edit') {
@@ -61,15 +54,19 @@ const NewChapterPage = () => {
         setChapter(data);
       } else if (requestType === 'create') {
         if (courseId) {
-          setChapter({ title: '', content: '', courseID: courseId, id: '' });
+          setChapter({
+            title: '',
+            content: '',
+            courseID: courseId,
+            id: '',
+            sub_topis: [],
+          });
         }
       }
     };
     unsub();
   }, [requestType]);
-  const handleeditCourseChapter: SubmitHandler<ChapterFormPost> = (
-    data: any
-  ) => {
+  const handleeditCourseChapter: any = (data: any) => {
     editChapter(data);
   };
 
@@ -99,9 +96,7 @@ const NewChapterPage = () => {
     },
   });
 
-  const handleCreateCourseChapter: SubmitHandler<ChapterFormPost> = (
-    data: any
-  ) => {
+  const handleCreateCourseChapter: any = (data: any) => {
     createChapter(data);
   };
   const actions = [
@@ -228,7 +223,7 @@ const NewChapterPage = () => {
               </tr>
             </thead>
             <tbody>
-              {chapter?.sub_topics?.map((item) => (
+              {chapter?.sub_topics?.map((item: any) => (
                 <tr key={item.id}>
                   <td>
                     <div>{item?.title}</div>

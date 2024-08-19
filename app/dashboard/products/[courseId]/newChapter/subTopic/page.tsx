@@ -71,7 +71,7 @@ const NewSubTopic = () => {
     };
     unsub();
   }, [requestType]);
-  const handleeditCourseChapter: SubmitHandler<subTopicFormPost> = (
+  const handleeditCourseChapter: SubmitHandler<subTopicFormPost> | any = (
     data: any
   ) => {
     editChapter(data);
@@ -107,7 +107,7 @@ const NewSubTopic = () => {
     },
   });
 
-  const handleCreateCourseChapter: SubmitHandler<subTopicFormPost> = (
+  const handleCreateCourseChapter: SubmitHandler<subTopicFormPost> | any = (
     data: any
   ) => {
     createChapter(data);
