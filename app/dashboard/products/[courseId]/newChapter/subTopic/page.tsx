@@ -1,12 +1,8 @@
 'use client';
 import { createClient } from '@/utils/supabase/client';
-import { Chapter } from '@prisma/client';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/router';
-import { title } from 'process';
 import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 type subTopicFormPost = {
@@ -24,7 +20,7 @@ type SubTopic = {
   courseId: string;
 };
 
-const newSubTopic = () => {
+const NewSubTopic = () => {
   const supabase = createClient();
   const searchParams = useSearchParams();
   const courseId = searchParams.get('courseId');
@@ -241,4 +237,4 @@ const newSubTopic = () => {
   );
 };
 
-export default newSubTopic;
+export default NewSubTopic;

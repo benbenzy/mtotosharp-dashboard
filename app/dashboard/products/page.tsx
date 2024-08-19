@@ -2,8 +2,6 @@
 import Pagination from '@/app/ui/dashboard/pagination/pagination';
 import RemoteImage from '@/app/ui/dashboard/remoteImage/RemoteImage';
 import Search from '@/app/ui/dashboard/search/search';
-import prisma from '@/prisma';
-import { Course } from '@prisma/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import Link from 'next/link';
@@ -36,7 +34,7 @@ function ProductsPage() {
     data: courses,
     isLoading,
     isError,
-  } = useQuery<Course[]>({
+  } = useQuery({
     queryKey: ['courses'],
     queryFn: async () => {
       const res = await axios.get('/api/courses');

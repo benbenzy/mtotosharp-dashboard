@@ -1,7 +1,6 @@
 'use client';
 import { ActionButton } from '@/app/ui/dashboard/ActionButton/ActionButton';
 import { createClient } from '@/utils/supabase/client';
-import { Chapter } from '@prisma/client';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import Link from 'next/link';
@@ -25,7 +24,7 @@ type ChapterFormPost = {
   courseId: string;
 };
 
-const newChapterPage = () => {
+const NewChapterPage = () => {
   const supabase = createClient();
   const searchParams = useSearchParams();
   const courseId = searchParams.get('courseId');
@@ -33,7 +32,7 @@ const newChapterPage = () => {
   const requestType = searchParams.get('requestType');
   const [selectedChapter, setSelectedChapter] = useState('');
   const { register, handleSubmit } = useForm<ChapterFormPost>();
-  const [chapter, setChapter] = useState<Chapter>({
+  const [chapter, setChapter] = useState({
     id: '',
     title: '',
     content: '',
@@ -356,4 +355,4 @@ const newChapterPage = () => {
   );
 };
 
-export default newChapterPage;
+export default NewChapterPage;

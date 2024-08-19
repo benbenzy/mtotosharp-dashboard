@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 
-function addTeamPage() {
+function AddTeamPage() {
   return <div>addTeamPage</div>;
 }
 
-export default addTeamPage;
+export default AddTeamPage;
