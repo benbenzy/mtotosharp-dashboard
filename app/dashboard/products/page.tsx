@@ -104,7 +104,7 @@ function ProductsPage() {
           </tr>
         </thead>
         <tbody>
-          {courses?.map((item) => (
+          {courses?.map((item: any) => (
             <tr key={item?.id} className="m-5 hover  border border-slate-100">
               <td className="w-32">
                 <div className="flex items-center gap-3">
@@ -114,6 +114,7 @@ function ProductsPage() {
                     fallback={'/noproduct.jpg'}
                     bucket="course_thumbnails"
                     path={item?.thumbnail}
+                    alt={''}
                   />
                 </div>
               </td>

@@ -107,7 +107,7 @@ function SingleUserPage() {
               fallback="/noavatar.png"
               bucket="avatars"
               alt="/noavatar.png"
-              style={'max-w-48 max-h-70 rounded-lg'}
+              className={'max-w-48 max-h-70 rounded-lg'}
               uploadImage={image}
               cancelled={!image}
             />

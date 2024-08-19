@@ -14,10 +14,10 @@ type AuthContextType = {
   };
 };
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType | any>(null);
 export const AuthProvider = ({ children }: { children: any }) => {
   const [currentUser, setCurrentUser] = useState<
-    AuthContextType['currentUser'] | null
+    AuthContextType['currentUser'] | any
   >(null);
   const [group, setGroup] = useState('');
 

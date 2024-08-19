@@ -8,8 +8,8 @@ type imageProps = {
   bucket: string;
   className: ImageProps['style'];
   size: number;
-  uploadImage: File;
-  cancelled: boolean;
+  uploadImage?: File;
+  cancelled?: boolean;
 } & Omit<ComponentProps<typeof Image>, 'src'>;
 
 function RemoteImage({
