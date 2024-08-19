@@ -2,11 +2,11 @@
 import { ActionButton } from '@/app/ui/dashboard/ActionButton/ActionButton';
 import RemoteImage from '@/app/ui/dashboard/remoteImage/RemoteImage';
 import { createClient } from '@/utils/supabase/client';
-import { Course } from '@prisma/client';
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import Link from 'next/link';
-import React, { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
+
+import React, { FC, useEffect, useRef, useState } from 'react';
 import {
   MdAddCircle,
   MdBorderColor,
@@ -27,13 +27,13 @@ interface CourseDetailsProps {
 const CourseDeatilsPage: FC<CourseDetailsProps> = ({ params }) => {
   const supabase = createClient();
   const [image, setImage] = useState<File | null>(null);
-  const [course, setCourse] = useState<Course>();
+  const [course, setCourse] = useState();
   const [onEdit, setOnEdit] = useState(false);
   const [selectedChapter, setSelectedChapter] = useState('');
   const [uploading, setUploading] = useState(false);
   const imageRef = useRef();
 
-  const { data } = useQuery<Course>({
+  const { data } = useQuery({
     queryKey: ['course', params?.courseId],
     queryFn: async () => {
       const res = await axios.get(`/api/courses/${params.courseId}`);

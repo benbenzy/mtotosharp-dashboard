@@ -1,18 +1,14 @@
 'use client';
 import Pagination from '@/app/ui/dashboard/pagination/pagination';
-import RemoteImage from '@/app/ui/dashboard/remoteImage/RemoteImage';
 import Search from '@/app/ui/dashboard/search/search';
-import { User } from '@prisma/client';
-import { UserIdentity } from '@supabase/supabase-js';
+
 import { useMutation, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import {
   MdDelete,
   MdMessage,
-  MdMore,
   MdMoreHoriz,
   MdPanoramaFishEye,
   MdRemoveRedEye,
