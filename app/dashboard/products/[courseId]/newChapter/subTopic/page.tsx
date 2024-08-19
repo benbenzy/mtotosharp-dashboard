@@ -3,7 +3,7 @@ import { createClient } from '@/utils/supabase/client';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 type subTopicFormPost = {
   id: string;
@@ -114,126 +114,128 @@ const NewSubTopic = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={(e) => e.preventDefault()}>
-        <label className="form-control w-full ">
-          <div className="label">
-            <span className="label-text text-slate-100">title?</span>
-          </div>
-          <input
-            {...register('id')}
-            type="text"
-            value={subTopic?.id}
-            placeholder="id"
-            className="input input-bordered w-full text-slate-900  hidden"
-          />
-          <input
-            {...register('chapterId')}
-            type="text"
-            value={chapterId ?? ''}
-            placeholder="chapterId"
-            className="input input-bordered w-full text-slate-900 hidden"
-          />
-          <input
-            {...register('courseId')}
-            type="text"
-            value={courseId ?? ''}
-            placeholder="courseId"
-            className="input input-bordered w-full text-slate-900 hidden"
-          />
-          <input
-            {...register('title')}
-            value={subTopic?.title}
-            onChange={(e) => {
-              setSubTopic({ ...subTopic, title: e.target.value });
-            }}
-            type="text"
-            placeholder="title"
-            className="input input-bordered w-full text-slate-900"
-          />
-        </label>
-        <label className="form-control w-full ">
-          <div className="label">
-            <span className="label-text text-slate-100">
-              chapter body content?
-            </span>
-          </div>
-          <textarea
-            {...register('content')}
-            value={subTopic?.content}
-            onChange={(e) => {
-              setSubTopic({ ...subTopic, content: e.target.value });
-            }}
-            rows={10}
-            placeholder="body content"
-            className="textarea textarea-bordered textarea-lg w-full text-slate-900"
-          ></textarea>
-        </label>
+    <Suspense>
+      <div>
+        <form onSubmit={(e) => e.preventDefault()}>
+          <label className="form-control w-full ">
+            <div className="label">
+              <span className="label-text text-slate-100">title?</span>
+            </div>
+            <input
+              {...register('id')}
+              type="text"
+              value={subTopic?.id}
+              placeholder="id"
+              className="input input-bordered w-full text-slate-900  hidden"
+            />
+            <input
+              {...register('chapterId')}
+              type="text"
+              value={chapterId ?? ''}
+              placeholder="chapterId"
+              className="input input-bordered w-full text-slate-900 hidden"
+            />
+            <input
+              {...register('courseId')}
+              type="text"
+              value={courseId ?? ''}
+              placeholder="courseId"
+              className="input input-bordered w-full text-slate-900 hidden"
+            />
+            <input
+              {...register('title')}
+              value={subTopic?.title}
+              onChange={(e) => {
+                setSubTopic({ ...subTopic, title: e.target.value });
+              }}
+              type="text"
+              placeholder="title"
+              className="input input-bordered w-full text-slate-900"
+            />
+          </label>
+          <label className="form-control w-full ">
+            <div className="label">
+              <span className="label-text text-slate-100">
+                chapter body content?
+              </span>
+            </div>
+            <textarea
+              {...register('content')}
+              value={subTopic?.content}
+              onChange={(e) => {
+                setSubTopic({ ...subTopic, content: e.target.value });
+              }}
+              rows={10}
+              placeholder="body content"
+              className="textarea textarea-bordered textarea-lg w-full text-slate-900"
+            ></textarea>
+          </label>
 
-        {createChapterError && (
-          <div className="toast">
-            <div className="alert alert-error">
-              <span>failed to create {error.message}</span>
+          {createChapterError && (
+            <div className="toast">
+              <div className="alert alert-error">
+                <span>failed to create {error.message}</span>
+              </div>
             </div>
-          </div>
-        )}
-        {createChapterProgress && (
-          <progress className="progress w-56">updating chapter...</progress>
-        )}
-        {createChapterSuccess && (
-          <div className="toast">
-            <div className="alert alert-success">
-              <span>chapter updated</span>
+          )}
+          {createChapterProgress && (
+            <progress className="progress w-56">updating chapter...</progress>
+          )}
+          {createChapterSuccess && (
+            <div className="toast">
+              <div className="alert alert-success">
+                <span>chapter updated</span>
+              </div>
             </div>
-          </div>
-        )}
-        {editChapterError && (
-          <div className="toast">
-            <div className="alert alert-error">
-              <span>failed to update chapter</span>
+          )}
+          {editChapterError && (
+            <div className="toast">
+              <div className="alert alert-error">
+                <span>failed to update chapter</span>
+              </div>
             </div>
-          </div>
-        )}
-        {editChapterProgress && (
-          <div className="toast">
-            <div className="alert alert-success">
-              <span>submitting update ... </span>
+          )}
+          {editChapterProgress && (
+            <div className="toast">
+              <div className="alert alert-success">
+                <span>submitting update ... </span>
+              </div>
             </div>
-          </div>
-        )}
-        {editChapterSuccess && (
-          <div className="toast">
-            <div className="alert alert-success">
-              <span>chapter updated </span>
+          )}
+          {editChapterSuccess && (
+            <div className="toast">
+              <div className="alert alert-success">
+                <span>chapter updated </span>
+              </div>
             </div>
-          </div>
+          )}
+        </form>
+        {requestType === 'edit' && (
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              handleSubmit(handleeditCourseChapter(subTopic));
+            }}
+            type="submit"
+            className="btn btn-success w-full mt-5"
+          >
+            update
+          </button>
         )}
-      </form>
-      {requestType === 'edit' && (
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            handleSubmit(handleeditCourseChapter(subTopic));
-          }}
-          type="submit"
-          className="btn btn-success w-full mt-5"
-        >
-          update
-        </button>
-      )}
-      {requestType === 'create' && (
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            handleSubmit(handleCreateCourseChapter(subTopic));
-          }}
-          type="submit"
-          className="btn btn-success w-full mt-5"
-        >
-          save
-        </button>
-      )}
-    </div>
+        {requestType === 'create' && (
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              handleSubmit(handleCreateCourseChapter(subTopic));
+            }}
+            type="submit"
+            className="btn btn-success w-full mt-5"
+          >
+            save
+          </button>
+        )}
+      </div>
+    </Suspense>
   );
 };
 
