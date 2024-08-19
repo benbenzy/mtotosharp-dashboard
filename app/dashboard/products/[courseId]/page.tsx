@@ -349,7 +349,7 @@ const CourseDeatilsPage: FC<CourseDetailsProps> = ({ params }) => {
         </thead>
         <tbody>
           {course?.chapters?.map((item, index) => (
-            <tr>
+            <tr key={item.id}>
               <td>
                 <div>{item?.title}</div>
               </td>
@@ -384,6 +384,7 @@ const CourseDeatilsPage: FC<CourseDetailsProps> = ({ params }) => {
                     {actions.map((item, index) => {
                       return (
                         <ActionButton
+                          key={item.name}
                           pathname={item.pathname}
                           icon={item.icon}
                           query={item.query}

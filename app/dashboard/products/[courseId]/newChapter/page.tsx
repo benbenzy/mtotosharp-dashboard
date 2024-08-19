@@ -229,7 +229,7 @@ const NewChapterPage = () => {
             </thead>
             <tbody>
               {chapter?.sub_topics?.map((item) => (
-                <tr>
+                <tr key={item.id}>
                   <td>
                     <div>{item?.title}</div>
                   </td>
@@ -262,6 +262,7 @@ const NewChapterPage = () => {
                         {actions.map((item) => {
                           return (
                             <ActionButton
+                              key={item.name}
                               pathname={item.pathname}
                               icon={item.icon}
                               query={item.query}

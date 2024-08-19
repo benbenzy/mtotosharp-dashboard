@@ -1,12 +1,11 @@
-"use client";
-import React from "react";
-import Card from "../ui/dashboard/card/card";
-import Rightbar from "../ui/dashboard/rightbar/rightbar";
-import Transaction from "../ui/dashboard/transaction/transaction";
-import Chart from "../ui/dashboard/chart/chart";
-import { MdAnalytics, MdPeople, MdSupervisedUserCircle } from "react-icons/md";
-
-async function DashBoardPage() {
+'use client';
+import React from 'react';
+import Card from '../ui/dashboard/card/card';
+import Rightbar from '../ui/dashboard/rightbar/rightbar';
+import Transaction from '../ui/dashboard/transaction/transaction';
+import Chart from '../ui/dashboard/chart/chart';
+import { MdAnalytics, MdPeople, MdSupervisedUserCircle } from 'react-icons/md';
+function DashBoardPage() {
   return (
     <div className=" flex flex-row gap-5 mt-5">
       <div className=" flex flex-1 flex-col gap-5 ">
