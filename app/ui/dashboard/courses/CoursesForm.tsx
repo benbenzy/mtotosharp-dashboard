@@ -1,7 +1,5 @@
 'use client';
 import { CourseFormPost } from '@/app/types/types.d';
-import prisma from '@/prisma';
-import { Category } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import React, { FC } from 'react';
@@ -58,7 +56,7 @@ const CoursesForm: FC<props> = ({ submit, isEditting }) => {
             className="p-2 bg-slate-500 rounded-md text-slate-200 mb-5 mt-5"
           >
             <option>select category</option>
-            {categories?.map((item: Category) => (
+            {categories?.map((item: any) => (
               <option value={item?.id} key={item?.id}>
                 {item.name}
               </option>

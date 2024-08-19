@@ -1,8 +1,8 @@
-import { Team } from "@prisma/client";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import React from "react";
-import { useForm } from "react-hook-form";
+'use client';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import React from 'react';
+import { useForm } from 'react-hook-form';
 
 function TeamForm() {
   const { register, handleSubmit } = useForm();
@@ -10,10 +10,10 @@ function TeamForm() {
     data: teams,
     isLoading: loadingTeams,
     isError: teamLoadingError,
-  } = useQuery<Team[]>({
-    queryKey: ["teams"],
+  } = useQuery<any>({
+    queryKey: ['teams'],
     queryFn: async () => {
-      const res = await axios.get("/api/teams");
+      const res = await axios.get('/api/teams');
       return res.data;
     },
   });

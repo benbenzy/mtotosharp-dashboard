@@ -128,7 +128,7 @@ function Sidebar() {
               alt="/noavatar.png"
               bucket="avatars"
               fallback="/noavatar.png"
-              style="rounded-full h-14 w-14"
+              className="rounded-full h-14 w-14"
               uploadImage={undefined}
               cancelled={false}
             />

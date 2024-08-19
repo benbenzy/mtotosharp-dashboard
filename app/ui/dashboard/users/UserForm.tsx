@@ -1,6 +1,5 @@
 'use client';
 import { UserFormPost } from '@/app/types/types.d';
-import prisma from '@/prisma';
 import React, { FC } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 interface FormProps {

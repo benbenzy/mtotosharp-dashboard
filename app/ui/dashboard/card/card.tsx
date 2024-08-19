@@ -1,5 +1,4 @@
-import React from "react";
-import { MdSupervisedUserCircle } from "react-icons/md";
+import React from 'react';
 
 interface props {
   title: string;
@@ -19,10 +18,11 @@ function Card({ title, icon, value, range, comment }: props) {
         <span className=" text-sm">
           <span
             className={`font-light ${
-              range?.startsWith("+") ? "text-green-600" : "text-red-500"
-            }`}>
-            {range}{" "}
-          </span>{" "}
+              range?.startsWith('+') ? 'text-green-600' : 'text-red-500'
+            }`}
+          >
+            {range}{' '}
+          </span>{' '}
           {comment}
         </span>
       </div>
