@@ -1,8 +1,5 @@
-import { db } from '@/firebase/server';
-import prisma from '@/prisma';
 import { createClient } from '@/utils/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
-import { title } from 'process';
 
 export async function GET(request: NextRequest) {
   const supabase = createClient();

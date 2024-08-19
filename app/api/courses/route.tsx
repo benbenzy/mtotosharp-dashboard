@@ -1,5 +1,3 @@
-import { connectToDatabase } from '@/app/helpers/server.helpers';
-import prisma from '@/prisma';
 import { createClient } from '@/utils/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 

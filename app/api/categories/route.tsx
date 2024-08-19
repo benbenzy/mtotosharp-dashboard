@@ -1,5 +1,3 @@
-import { connectToDatabase } from '@/app/helpers/server.helpers';
-import prisma from '@/prisma';
 import { createClient } from '@/utils/supabase/server';
 import { NextResponse } from 'next/server';
 export async function GET() {
@@ -23,31 +21,14 @@ export async function GET() {
 }
 export async function POST(req: Request) {
   try {
-    await connectToDatabase();
+    const supabase = createClient();
     const { name } = await req.json();
-    const cat = await prisma.category.create({ data: { name } });
-    return NextResponse.json(cat, { status: 200 });
+    const { data, error } = await supabase.from('categories').insert({ name });
+    return NextResponse.json(data, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { message: `failed to create category ${error}` },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
-  }
-}
-export async function DELETE(req: Request) {
-  await connectToDatabase();
-  try {
-    const { id } = await req.json();
-    await prisma.category.delete(id);
-    return NextResponse.json({ message: 'success deleted' }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json(
-      { message: `failed to delete category ${error}` },
-      { status: 500 }
-    );
-  } finally {
-    await prisma.$disconnect();
   }
 }

@@ -1,32 +1,13 @@
-import prisma from "@/prisma";
-import { NextResponse } from "next/server";
+import { createClient } from '@/utils/supabase/server';
+import { NextResponse } from 'next/server';
 
 export async function GET() {
+  const supabase = createClient();
+
   try {
-    const role = await prisma.team.findMany();
-    return NextResponse.json(role, { status: 200 });
+    const { data, error } = await supabase.from('teams').select('*');
+    return NextResponse.json(data, { status: 200 });
   } catch (error) {
-    return NextResponse.json("failed", { status: 500 });
-  }
-}
-export async function POST(req: Request) {
-  const { name, role, adminID } = await req.json();
-  try {
-    const res = await prisma.team.create({ data: { name, adminID, role } });
-    return NextResponse.json(res, { status: 200 });
-  } catch (error) {
-    return NextResponse.json("failed", { status: 500 });
-  }
-}
-export async function PATCH(req: Request) {
-  const { name, role, adminID, id } = await req.json();
-  try {
-    const res = await prisma.team.update({
-      data: { name, adminID, role },
-      where: { id },
-    });
-    return NextResponse.json(res, { status: 200 });
-  } catch (error) {
-    return NextResponse.json("failed", { status: 500 });
+    return NextResponse.json('failed', { status: 500 });
   }
 }

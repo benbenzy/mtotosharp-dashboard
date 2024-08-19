@@ -1,16 +1,7 @@
 'use client';
-import {
-  useContext,
-  createContext,
-  useState,
-  useEffect,
-  SetStateAction,
-} from 'react';
-import Cookies from 'js-cookie';
-import { firebaseAuth } from '@/firebase/client';
+import { useContext, createContext, useState, useEffect } from 'react';
+
 import { createClient } from '@/utils/supabase/client';
-import { fetchUser } from '@/utils/supabase/actions';
-import { Session, User } from '@supabase/supabase-js';
 
 type AuthContextType = {
   currentUser: {
