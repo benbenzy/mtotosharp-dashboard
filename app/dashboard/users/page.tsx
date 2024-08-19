@@ -4,7 +4,7 @@ import Search from '@/app/ui/dashboard/search/search';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import {
   MdDelete,
   MdMessage,
@@ -91,7 +91,9 @@ function UsersPage({ searchParams }: props) {
   return (
     <div className="bg-slate-800 rounded-md p-5 mt-5">
       <div className="flex flex-row items-center justify-between">
-        <Search placeholder="search user by email/id" />
+        <Suspense>
+          <Search placeholder="search user by email/id" />
+        </Suspense>
         <Link href={'/dashboard/users/add'}>
           <button className="p-2 bg-slate-700 hover:bg-slate-500 cursor-pointer rounded-md text-slate-200 border-none">
             Add user

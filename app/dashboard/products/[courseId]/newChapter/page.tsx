@@ -129,229 +129,225 @@ const NewChapterPage = () => {
   });
 
   return (
-    <Suspense>
-      <div>
-        <form onSubmit={(e) => e.preventDefault()}>
-          <label className="form-control w-full ">
-            <div className="label">
-              <span className="label-text text-slate-100">chapter title?</span>
-            </div>
-            <input
-              {...register('id')}
-              type="text"
-              value={chapter?.id}
-              placeholder="id"
-              className="input input-bordered w-full text-slate-900  hidden"
-            />
-            <input
-              {...register('courseId')}
-              type="text"
-              value={courseId ?? ''}
-              placeholder="courseId"
-              className="input input-bordered w-full text-slate-900 hidden"
-            />
-            <input
-              {...register('title')}
-              value={chapter?.title}
-              onChange={(e) => {
-                setChapter({ ...chapter, title: e.target.value });
+    <div>
+      <form onSubmit={(e) => e.preventDefault()}>
+        <label className="form-control w-full ">
+          <div className="label">
+            <span className="label-text text-slate-100">chapter title?</span>
+          </div>
+          <input
+            {...register('id')}
+            type="text"
+            value={chapter?.id}
+            placeholder="id"
+            className="input input-bordered w-full text-slate-900  hidden"
+          />
+          <input
+            {...register('courseId')}
+            type="text"
+            value={courseId ?? ''}
+            placeholder="courseId"
+            className="input input-bordered w-full text-slate-900 hidden"
+          />
+          <input
+            {...register('title')}
+            value={chapter?.title}
+            onChange={(e) => {
+              setChapter({ ...chapter, title: e.target.value });
+            }}
+            type="text"
+            placeholder="title"
+            className="input input-bordered w-full text-slate-900"
+          />
+        </label>
+        <label className="form-control w-full ">
+          <div className="label">
+            <span className="label-text text-slate-100">
+              chapter body content?
+            </span>
+          </div>
+          <textarea
+            {...register('content')}
+            value={chapter?.content}
+            onChange={(e) => {
+              setChapter({ ...chapter, content: e.target.value });
+            }}
+            rows={10}
+            placeholder="body content"
+            className="textarea textarea-bordered textarea-lg w-full text-slate-900"
+          ></textarea>
+        </label>
+        {requestType === 'edit' && (
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              handleSubmit(handleeditCourseChapter(chapter));
+            }}
+            type="submit"
+            className="btn btn-success w-full mt-5"
+          >
+            update
+          </button>
+        )}
+        {requestType === 'create' && (
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              handleSubmit(handleCreateCourseChapter(chapter));
+            }}
+            type="submit"
+            className="btn btn-success w-full mt-5"
+          >
+            save
+          </button>
+        )}
+        <div>
+          <div className="flex flex-row justify-between my-1">
+            <div className=" font-bold uppercase underline">sub topics</div>
+
+            <Link
+              href={{
+                pathname: `/dashboard/products/${chapterId}/newChapter/subTopic`,
+                query: { chapterId: chapterId, requestType: 'create' },
               }}
-              type="text"
-              placeholder="title"
-              className="input input-bordered w-full text-slate-900"
-            />
-          </label>
-          <label className="form-control w-full ">
-            <div className="label">
-              <span className="label-text text-slate-100">
-                chapter body content?
-              </span>
-            </div>
-            <textarea
-              {...register('content')}
-              value={chapter?.content}
-              onChange={(e) => {
-                setChapter({ ...chapter, content: e.target.value });
-              }}
-              rows={10}
-              placeholder="body content"
-              className="textarea textarea-bordered textarea-lg w-full text-slate-900"
-            ></textarea>
-          </label>
-          {requestType === 'edit' && (
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                handleSubmit(handleeditCourseChapter(chapter));
-              }}
-              type="submit"
-              className="btn btn-success w-full mt-5"
             >
-              update
-            </button>
-          )}
-          {requestType === 'create' && (
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                handleSubmit(handleCreateCourseChapter(chapter));
-              }}
-              type="submit"
-              className="btn btn-success w-full mt-5"
-            >
-              save
-            </button>
-          )}
-          <div>
-            <div className="flex flex-row justify-between my-1">
-              <div className=" font-bold uppercase underline">sub topics</div>
-
-              <Link
-                href={{
-                  pathname: `/dashboard/products/${chapterId}/newChapter/subTopic`,
-                  query: { chapterId: chapterId, requestType: 'create' },
-                }}
-              >
-                <button className="btn btn-neutral">add new</button>
-              </Link>
-            </div>
-
-            <table className="w-full">
-              <thead>
-                <tr>
-                  <td>title</td> <td>createdAt</td> <td>reviewed</td>
-                  <td>completed</td> <td>actions</td>
-                </tr>
-              </thead>
-              <tbody>
-                {chapter?.sub_topics?.map((item: any) => (
-                  <tr key={item.id}>
-                    <td>
-                      <div>{item?.title}</div>
-                    </td>
-                    <td>{new Date(item?.created_at).toDateString()}</td>
-                    <td>
-                      <div>
-                        {item?.published ? (
-                          <MdCheckBox />
-                        ) : (
-                          <MdCheckBoxOutlineBlank />
-                        )}
-                      </div>
-                    </td>
-
-                    <td>
-                      <div>{item?.published ? 'reviwed' : 'complete'}</div>
-                    </td>
-                    <td>
-                      <button
-                        onClick={() => {
-                          selectedChapter == item?.id
-                            ? setSelectedChapter('')
-                            : setSelectedChapter(item.id);
-                        }}
-                      >
-                        <MdMoreVert />
-                      </button>
-                      {selectedChapter == item.id && (
-                        <div className="flex flex-col gap-1 absolute bg-slate-700">
-                          {actions.map((item) => {
-                            return (
-                              <ActionButton
-                                key={item.name}
-                                pathname={item.pathname}
-                                icon={item.icon}
-                                query={item.query}
-                                name={item.name}
-                              />
-                            );
-                          })}
-                          <button
-                            onClick={() => handleDelete()}
-                            className="flex flex-row text-red-500 items-center gap-1 hover:bg-slate-400 hover:cursor-pointer"
-                          >
-                            <MdDelete />
-                            delete
-                          </button>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+              <button className="btn btn-neutral">add new</button>
+            </Link>
           </div>
 
-          {createChapterError && (
-            <div className="toast">
-              <div className="alert alert-error">
-                <span>failed to create {error.message}</span>
-              </div>
+          <table className="w-full">
+            <thead>
+              <tr>
+                <td>title</td> <td>createdAt</td> <td>reviewed</td>
+                <td>completed</td> <td>actions</td>
+              </tr>
+            </thead>
+            <tbody>
+              {chapter?.sub_topics?.map((item: any) => (
+                <tr key={item.id}>
+                  <td>
+                    <div>{item?.title}</div>
+                  </td>
+                  <td>{new Date(item?.created_at).toDateString()}</td>
+                  <td>
+                    <div>
+                      {item?.published ? (
+                        <MdCheckBox />
+                      ) : (
+                        <MdCheckBoxOutlineBlank />
+                      )}
+                    </div>
+                  </td>
+
+                  <td>
+                    <div>{item?.published ? 'reviwed' : 'complete'}</div>
+                  </td>
+                  <td>
+                    <button
+                      onClick={() => {
+                        selectedChapter == item?.id
+                          ? setSelectedChapter('')
+                          : setSelectedChapter(item.id);
+                      }}
+                    >
+                      <MdMoreVert />
+                    </button>
+                    {selectedChapter == item.id && (
+                      <div className="flex flex-col gap-1 absolute bg-slate-700">
+                        {actions.map((item) => {
+                          return (
+                            <ActionButton
+                              key={item.name}
+                              pathname={item.pathname}
+                              icon={item.icon}
+                              query={item.query}
+                              name={item.name}
+                            />
+                          );
+                        })}
+                        <button
+                          onClick={() => handleDelete()}
+                          className="flex flex-row text-red-500 items-center gap-1 hover:bg-slate-400 hover:cursor-pointer"
+                        >
+                          <MdDelete />
+                          delete
+                        </button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {createChapterError && (
+          <div className="toast">
+            <div className="alert alert-error">
+              <span>failed to create {error.message}</span>
             </div>
-          )}
-          {createChapterProgress && (
-            <div className="toast">
-              <div className="alert alert-success">
-                <progress className="progress w-56">
-                  updating chapter...
-                </progress>
-                <span>updating ...</span>
-              </div>
+          </div>
+        )}
+        {createChapterProgress && (
+          <div className="toast">
+            <div className="alert alert-success">
+              <progress className="progress w-56">updating chapter...</progress>
+              <span>updating ...</span>
             </div>
-          )}
-          {createChapterSuccess && (
-            <div className="toast">
-              <div className="alert alert-success">
-                <span>chapter updated</span>
-              </div>
+          </div>
+        )}
+        {createChapterSuccess && (
+          <div className="toast">
+            <div className="alert alert-success">
+              <span>chapter updated</span>
             </div>
-          )}
-          {editChapterError && (
-            <div className="toast">
-              <div className="alert alert-error">
-                <span>failed to update chapter</span>
-              </div>
+          </div>
+        )}
+        {editChapterError && (
+          <div className="toast">
+            <div className="alert alert-error">
+              <span>failed to update chapter</span>
             </div>
-          )}
-          {editChapterProgress && (
-            <div className="toast">
-              <div className="alert alert-success">
-                <span>submitting update ... </span>
-              </div>
+          </div>
+        )}
+        {editChapterProgress && (
+          <div className="toast">
+            <div className="alert alert-success">
+              <span>submitting update ... </span>
             </div>
-          )}
-          {editChapterSuccess && (
-            <div className="toast">
-              <div className="alert alert-success">
-                <span>chapter updated </span>
-              </div>
+          </div>
+        )}
+        {editChapterSuccess && (
+          <div className="toast">
+            <div className="alert alert-success">
+              <span>chapter updated </span>
             </div>
-          )}
-          {deleteChapterError && (
-            <div className="toast">
-              <div className="alert alert-error">
-                <span>failed to delete {error?.message}</span>
-              </div>
+          </div>
+        )}
+        {deleteChapterError && (
+          <div className="toast">
+            <div className="alert alert-error">
+              <span>failed to delete {error?.message}</span>
             </div>
-          )}
-          {deleteChapterProgress && (
-            <div className="toast">
-              <div className="alert alert-success">
-                <progress className="progress w-56">deleting ...</progress>
-                <span>deleting ...</span>
-              </div>
+          </div>
+        )}
+        {deleteChapterProgress && (
+          <div className="toast">
+            <div className="alert alert-success">
+              <progress className="progress w-56">deleting ...</progress>
+              <span>deleting ...</span>
             </div>
-          )}
-          {deleteChapterSuccess && (
-            <div className="toast">
-              <div className="alert alert-success">
-                <span>chapter deleted</span>
-              </div>
+          </div>
+        )}
+        {deleteChapterSuccess && (
+          <div className="toast">
+            <div className="alert alert-success">
+              <span>chapter deleted</span>
             </div>
-          )}
-        </form>
-      </div>
-    </Suspense>
+          </div>
+        )}
+      </form>
+    </div>
   );
 };
 

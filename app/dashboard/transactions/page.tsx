@@ -1,59 +1,61 @@
-"use client";
-import Search from "@/app/ui/dashboard/search/search";
-import Link from "next/link";
-import React, { useState } from "react";
-import { MdDelete, MdMore, MdRemoveRedEye } from "react-icons/md";
+'use client';
+import Search from '@/app/ui/dashboard/search/search';
+import Link from 'next/link';
+import React, { Suspense, useState } from 'react';
+import { MdDelete, MdMore, MdRemoveRedEye } from 'react-icons/md';
 
 function TransactionsPage() {
-  const [selectedItem, setSelectedItem] = useState("");
+  const [selectedItem, setSelectedItem] = useState('');
   const transactions = [
     {
-      id: "1",
-      code: "abcde",
-      createdAt: "mon 19 june 2023",
-      phone: "0797766669",
-      name: "joyce",
-      amount: "300",
+      id: '1',
+      code: 'abcde',
+      createdAt: 'mon 19 june 2023',
+      phone: '0797766669',
+      name: 'joyce',
+      amount: '300',
     },
     {
-      id: "2",
-      code: "abcde",
-      createdAt: "mon 19 june 2023",
-      phone: "0797766669",
-      name: "joyce",
-      amount: "300",
+      id: '2',
+      code: 'abcde',
+      createdAt: 'mon 19 june 2023',
+      phone: '0797766669',
+      name: 'joyce',
+      amount: '300',
     },
     {
-      id: "3",
-      code: "abcde",
-      createdAt: "mon 19 june 2023",
-      phone: "0797766669",
-      name: "joyce",
-      amount: "300",
+      id: '3',
+      code: 'abcde',
+      createdAt: 'mon 19 june 2023',
+      phone: '0797766669',
+      name: 'joyce',
+      amount: '300',
     },
     {
-      id: "4",
-      code: "abcde",
-      createdAt: "mon 19 june 2023",
-      phone: "0797766669",
-      name: "joyce",
-      amount: "300",
+      id: '4',
+      code: 'abcde',
+      createdAt: 'mon 19 june 2023',
+      phone: '0797766669',
+      name: 'joyce',
+      amount: '300',
     },
     {
-      id: "5",
-      code: "abcde",
-      createdAt: "mon 19 june 2023",
-      phone: "0797766669",
-      name: "joyce",
-      amount: "300",
+      id: '5',
+      code: 'abcde',
+      createdAt: 'mon 19 june 2023',
+      phone: '0797766669',
+      name: 'joyce',
+      amount: '300',
     },
   ];
   async function handleDeleteTransaction() {}
   return (
     <div>
       <div className="flex flex-row items-center justify-between mt-2">
-        <Search placeholder="enter transaction code" />
-        <Link href={"/dashboard/users/add"}>
+        <Suspense>
+          <Search placeholder="enter transaction code" />
+        </Suspense>
+        <Link href={'/dashboard/users/add'}>
           <button className="p-2 bg-slate-700 hover:bg-slate-500 cursor-pointer rounded-md text-slate-200 border-none">
             Add transaction
           </button>
@@ -93,7 +95,7 @@ function TransactionsPage() {
                   size={24}
                   onClick={() =>
                     selectedItem === item.id
-                      ? setSelectedItem("")
+                      ? setSelectedItem('')
                       : setSelectedItem(item.id)
                   }
                 />
@@ -101,14 +103,16 @@ function TransactionsPage() {
                   <div className="flex flex-col gap-2 absolute bg-slate-800 rounded-md right-20 text-slate-200">
                     <button
                       onClick={handleDeleteTransaction}
-                      className="flex flex-row gap-1 items-center hover:bg-slate-600">
+                      className="flex flex-row gap-1 items-center hover:bg-slate-600"
+                    >
                       <MdDelete /> delete
                     </button>
                     <Link
                       href={{
                         pathname: `/dashboard/users/`,
                         query: { id: item.id },
-                      }}>
+                      }}
+                    >
                       <button className="flex flex-row gap-1 items-center  hover:bg-slate-600">
                         <MdRemoveRedEye /> view
                       </button>

@@ -1,7 +1,7 @@
 'use client';
 import Search from '@/app/ui/dashboard/search/search';
 import Link from 'next/link';
-import React from 'react';
+import React, { Suspense } from 'react';
 
 function TeamsPage() {
   const teams = [
@@ -22,7 +22,9 @@ function TeamsPage() {
   return (
     <div>
       <div className="flex flex-row items-center justify-between mt-5 mb-5">
-        <Search placeholder="search team by name or id" />
+        <Suspense>
+          <Search placeholder="search team by name or id" />
+        </Suspense>
         <Link href={'/dashboard/teams/add'}>
           <button className="p-2 bg-slate-700 hover:bg-slate-500 cursor-pointer rounded-md text-slate-200 border-none">
             new team
