@@ -1,7 +1,6 @@
 'use client';
 import Pagination from '@/app/ui/dashboard/pagination/pagination';
 import Search from '@/app/ui/dashboard/search/search';
-
 import { useMutation, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import Link from 'next/link';

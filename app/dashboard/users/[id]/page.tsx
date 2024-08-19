@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import { createClient } from '@/utils/supabase/client';
-import { UserRoles } from '@prisma/client';
 import RemoteImage from '@/app/ui/dashboard/remoteImage/RemoteImage';
 export interface UserProps {
   id: string;
