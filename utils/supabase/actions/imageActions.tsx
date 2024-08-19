@@ -6,8 +6,9 @@ export async function uploadAvatar({ image, userId }: any) {
   const { data: user, error: getUserError } = await supabase
     .from('profiles')
     .select('*')
-    .eq('id', userId);
-  if (user[0].avatar_url === '') {
+    .eq('id', userId)
+    .single();
+  if (user[0]?.avatar_url === '') {
     const fileExt = image?.name?.split('.').pop();
     const filePath = `${user?.id}-${Math.random()}.${fileExt}`;
     const { error, data } = await supabase.storage
@@ -26,7 +27,7 @@ export async function uploadAvatar({ image, userId }: any) {
   } else {
     const { error, data } = await supabase.storage
       .from('avatars')
-      .update(user[0].avatar_url, image);
+      .update(user[0]?.avatar_url, image);
     if (!error) {
       const { data: userData, error: userError } = await supabase
         .from('profiles')
