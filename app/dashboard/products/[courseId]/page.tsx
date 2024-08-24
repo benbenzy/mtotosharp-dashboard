@@ -5,6 +5,7 @@ import { createClient } from '@/utils/supabase/client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
+import Link from 'next/link';
 
 import React, { FC, useEffect, useRef, useState } from 'react';
 import {
@@ -14,6 +15,7 @@ import {
   MdCheckBoxOutlineBlank,
   MdCreateNewFolder,
   MdDelete,
+  MdEdit,
   MdMoreVert,
   MdRemoveRedEye,
 } from 'react-icons/md';
@@ -100,7 +102,11 @@ const CourseDeatilsPage: FC<CourseDetailsProps> = ({ params }) => {
       );
     },
   });
-  const { mutate: uploadChapter, isPending: uploadingChapter } = useMutation({
+  const {
+    mutate: uploadChapter,
+    isPending: uploadingChapter,
+    isSuccess: uploadChapterSuccess,
+  } = useMutation({
     mutationFn: async ({ title }: { title: string }) => {
       try {
         await axios.post(`/api/courses/${params?.courseId}/chapters`, {
@@ -112,6 +118,9 @@ const CourseDeatilsPage: FC<CourseDetailsProps> = ({ params }) => {
         throw new Error('failed to upload chapter');
       }
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['course', params?.courseId] });
+    },
   });
   function createChapter() {
     let title = prompt('Enter chapter title');
@@ -122,48 +131,7 @@ const CourseDeatilsPage: FC<CourseDetailsProps> = ({ params }) => {
     }
   }
   const queryClient = useQueryClient();
-  const actions = [
-    {
-      name: 'view',
-      icon: <MdRemoveRedEye />,
-      pathname: `/dashboard/products/${params.courseId}/newChapter`,
-      query: {
-        requestType: 'view',
-        courseId: params.courseId,
-        chapterId: selectedChapter,
-      },
-    },
-    {
-      name: 'add quiz',
-      icon: <MdAddCircle />,
-      pathname: `/dashboard/products/${params.courseId}/newChapter`,
-      query: {
-        requestType: 'create',
-        courseId: params.courseId,
-        chapterId: selectedChapter,
-      },
-    },
-    {
-      name: 'add subtopic',
-      icon: <MdCreateNewFolder />,
-      pathname: `/dashboard/products/${params.courseId}/newChapter`,
-      query: {
-        requestType: 'create',
-        courseId: params.courseId,
-        chapterId: selectedChapter,
-      },
-    },
-    {
-      name: 'edit',
-      icon: <MdBorderColor />,
-      pathname: `/dashboard/products/${params.courseId}/newChapter`,
-      query: {
-        requestType: 'edit',
-        courseId: params.courseId,
-        chapterId: selectedChapter,
-      },
-    },
-  ];
+
   return (
     <div>
       {updateError && (
@@ -190,7 +158,14 @@ const CourseDeatilsPage: FC<CourseDetailsProps> = ({ params }) => {
       {uploadingChapter && (
         <div className="toast">
           <div className="alert alert-success">
-            <span>uploading chapter... </span>
+            <span>creating chapter... </span>
+          </div>
+        </div>
+      )}
+      {uploadChapterSuccess && (
+        <div className="toast">
+          <div className="alert alert-success">
+            <span>chapter created </span>
           </div>
         </div>
       )}
@@ -220,8 +195,8 @@ const CourseDeatilsPage: FC<CourseDetailsProps> = ({ params }) => {
           <RemoteImage
             path={`${course?.thumbnail}`}
             fallback="/noproduct.jpg"
-            size={150}
-            className={'h-full w-full'}
+            size={120}
+            className=" w-56 h-3/4"
             bucket={'course_thumbnails'}
             alt={''}
             onClick={() => imageRef?.current?.click()}
@@ -380,18 +355,32 @@ const CourseDeatilsPage: FC<CourseDetailsProps> = ({ params }) => {
                   <MdMoreVert />
                 </button>
                 {selectedChapter == item.id && (
-                  <div className="flex flex-col gap-1 absolute bg-slate-700">
-                    {actions.map((item, index) => {
-                      return (
-                        <ActionButton
-                          key={item.name}
-                          pathname={item.pathname}
-                          icon={item.icon}
-                          query={item.query}
-                          name={item.name}
-                        />
-                      );
-                    })}
+                  <div className="flex flex-col gap-2 absolute bg-slate-700">
+                    <Link
+                      href={{
+                        pathname: `/dashboard/products/${params.courseId}/newChapter`,
+                        query: {
+                          requestType: 'edit',
+                          courseId: params.courseId,
+                          chapterId: selectedChapter,
+                        },
+                      }}
+                    >
+                      <button
+                        onClick={() => {}}
+                        className="flex flex-row items-center gap-2 text-green-500 hover:bg-slate-400 hover:cursor-pointer"
+                      >
+                        <MdRemoveRedEye /> open
+                      </button>
+                    </Link>
+
+                    <button
+                      onClick={() => {}}
+                      className="flex flex-row items-center gap-2 text-green-500 hover:bg-slate-400 hover:cursor-pointer"
+                    >
+                      <MdEdit /> edit title
+                    </button>
+
                     <button
                       onClick={() => {
                         let text = 'confirm delete';
@@ -401,7 +390,7 @@ const CourseDeatilsPage: FC<CourseDetailsProps> = ({ params }) => {
                           text = 'You canceled!';
                         }
                       }}
-                      className="flex flex-row items-center text-red-500 hover:bg-slate-400 hover:cursor-pointer"
+                      className="flex flex-row gap-2 items-center text-red-500 hover:bg-slate-400 hover:cursor-pointer"
                     >
                       <MdDelete /> delete
                     </button>

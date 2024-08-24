@@ -3,6 +3,7 @@ import { createClient } from '@/utils/supabase/client';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 import React, { Suspense, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 type subTopicFormPost = {
@@ -105,6 +106,15 @@ const NewSubTopic = () => {
         newChapter
       );
     },
+    onSuccess: () => {
+      setSubTopic({
+        title: '',
+        content: '',
+        chapterId: `${chapterId}`,
+        id: '',
+        courseId: '',
+      });
+    },
   });
 
   const handleCreateCourseChapter: SubmitHandler<subTopicFormPost> | any = (
@@ -112,7 +122,6 @@ const NewSubTopic = () => {
   ) => {
     createChapter(data);
   };
-
   return (
     <div>
       <form onSubmit={(e) => e.preventDefault()}>
@@ -149,14 +158,12 @@ const NewSubTopic = () => {
             }}
             type="text"
             placeholder="title"
-            className="input input-bordered w-full text-slate-900"
+            className="input input-bordered w-full dark:bg-slate-800 dark:text-slate-100 text-slate-900"
           />
         </label>
         <label className="form-control w-full ">
           <div className="label">
-            <span className="label-text text-slate-100">
-              chapter body content?
-            </span>
+            <span className="label-text text-slate-100">body</span>
           </div>
           <textarea
             {...register('content')}
@@ -166,7 +173,7 @@ const NewSubTopic = () => {
             }}
             rows={10}
             placeholder="body content"
-            className="textarea textarea-bordered textarea-lg w-full text-slate-900"
+            className="textarea textarea-bordered textarea-lg w-full  dark:bg-slate-800 dark:text-slate-100 text-slate-900"
           ></textarea>
         </label>
 

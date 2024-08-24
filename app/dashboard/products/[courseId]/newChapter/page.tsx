@@ -5,17 +5,14 @@ import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import React, { Suspense, useEffect, useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import {
-  MdAddCircle,
   MdBorderColor,
   MdCheckBox,
   MdCheckBoxOutlineBlank,
-  MdCreateNewFolder,
   MdDelete,
   MdMoreVert,
-  MdRemoveRedEye,
 } from 'react-icons/md';
 type ChapterFormPost = {
   id: string;
@@ -132,89 +129,22 @@ const NewChapterPage = () => {
     <div>
       <form onSubmit={(e) => e.preventDefault()}>
         <label className="form-control w-full ">
-          <div className="label">
-            <span className="label-text text-slate-100">chapter title?</span>
-          </div>
-          <input
-            {...register('id')}
-            type="text"
-            value={chapter?.id}
-            placeholder="id"
-            className="input input-bordered w-full text-slate-900  hidden"
-          />
-          <input
-            {...register('courseId')}
-            type="text"
-            value={courseId ?? ''}
-            placeholder="courseId"
-            className="input input-bordered w-full text-slate-900 hidden"
-          />
-          <input
-            {...register('title')}
-            value={chapter?.title}
-            onChange={(e) => {
-              setChapter({ ...chapter, title: e.target.value });
-            }}
-            type="text"
-            placeholder="title"
-            className="input input-bordered w-full text-slate-900"
-          />
-        </label>
-        <label className="form-control w-full ">
-          <div className="label">
-            <span className="label-text text-slate-100">
-              chapter body content?
+          <div className="label flex flex-row">
+            <span className="label-text capitalize text-slate-100">
+              {chapter?.title}
             </span>
-          </div>
-          <textarea
-            {...register('content')}
-            value={chapter?.content}
-            onChange={(e) => {
-              setChapter({ ...chapter, content: e.target.value });
-            }}
-            rows={10}
-            placeholder="body content"
-            className="textarea textarea-bordered textarea-lg w-full text-slate-900"
-          ></textarea>
-        </label>
-        {requestType === 'edit' && (
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              handleSubmit(handleeditCourseChapter(chapter));
-            }}
-            type="submit"
-            className="btn btn-success w-full mt-5"
-          >
-            update
-          </button>
-        )}
-        {requestType === 'create' && (
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              handleSubmit(handleCreateCourseChapter(chapter));
-            }}
-            type="submit"
-            className="btn btn-success w-full mt-5"
-          >
-            save
-          </button>
-        )}
-        <div>
-          <div className="flex flex-row justify-between my-1">
-            <div className=" font-bold uppercase underline">sub topics</div>
-
             <Link
               href={{
                 pathname: `/dashboard/products/${chapterId}/newChapter/subTopic`,
                 query: { chapterId: chapterId, requestType: 'create' },
               }}
             >
-              <button className="btn btn-neutral">add new</button>
+              <button className="btn btn-neutral">add subTopic</button>
             </Link>
           </div>
+        </label>
 
+        <div>
           <table className="w-full">
             <thead>
               <tr>

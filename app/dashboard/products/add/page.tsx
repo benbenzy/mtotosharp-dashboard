@@ -22,6 +22,7 @@ function AddProductspage() {
     mutationFn: async (newPlan) => {
       await axios.post('/api/courses', newPlan);
     },
+    onSuccess: () => {},
   });
 
   return (
