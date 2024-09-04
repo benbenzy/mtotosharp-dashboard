@@ -61,9 +61,24 @@ export async function updateSession (request:NextRequest) {
 
   // refreshing the auth token
   const {data:{user}}=await supabase.auth.getUser()
-  if(!user&&!request.nextUrl.pathname.startsWith("/login")){
-    return NextResponse.redirect(new URL("/login",request.url),)
+  if (!user) {
+    if (request.nextUrl.pathname !== '/') {
+      return NextResponse.redirect(new URL("/", request.url))
+    }
+    return response
   }
+   // Fetch user profile to get the role
+   const role = user?.role
+   if (role === 'authenticated' && !request.nextUrl.pathname.startsWith("/")) {
+    return NextResponse.redirect(new URL("/", request.url))
+  }
+ 
+   if (role === 'postgress' && !request.nextUrl.pathname.startsWith("/dashboard")) {
+     return NextResponse.redirect(new URL("/dashboard", request.url))
+   }
+   if (role === 'author' && !request.nextUrl.pathname.startsWith("/author")) {
+     return NextResponse.redirect(new URL("/author", request.url))
+   }
  
 
   return response

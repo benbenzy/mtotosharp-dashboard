@@ -2,6 +2,7 @@
 import { useContext, createContext, useState, useEffect } from 'react';
 
 import { createClient } from '@/utils/supabase/client';
+import { Session } from 'next-auth';
 
 type AuthContextType = {
   currentUser: {
@@ -19,22 +20,29 @@ export const AuthProvider = ({ children }: { children: any }) => {
   const [currentUser, setCurrentUser] = useState<
     AuthContextType['currentUser'] | any
   >(null);
-  const [group, setGroup] = useState('');
+  const [authSession, setAuthSession] = useState<Session | null | undefined>(
+    null
+  );
 
   const supabase = createClient();
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setAuthSession(session);
+    });
 
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setAuthSession(session);
+    });
+  }, []);
   useEffect(() => {
     const user = async () => {
-      const { data } = await supabase.auth.getSession();
-
-      if (data?.session) {
+      if (authSession) {
         const { data: userData } = await supabase
           .from('profiles')
           .select('*')
-          .eq('id', data?.session?.user?.id)
+          .eq('id', authSession?.user?.id)
           .single();
-        setCurrentUser(userData || null);
-        setGroup(userData?.group);
+        setCurrentUser(userData);
       }
     };
     user();

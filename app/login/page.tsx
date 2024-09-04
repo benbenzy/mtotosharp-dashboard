@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { supabaseLogin } from '../../utils/supabase/actions';
-import { redirect } from 'next/navigation';
 
 async function LoginPage() {
   return (

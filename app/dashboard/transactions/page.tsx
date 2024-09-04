@@ -1,53 +1,20 @@
 'use client';
 import Search from '@/app/ui/dashboard/search/search';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 import Link from 'next/link';
 import React, { Suspense, useState } from 'react';
 import { MdDelete, MdMore, MdRemoveRedEye } from 'react-icons/md';
 
 function TransactionsPage() {
   const [selectedItem, setSelectedItem] = useState('');
-  const transactions = [
-    {
-      id: '1',
-      code: 'abcde',
-      createdAt: 'mon 19 june 2023',
-      phone: '0797766669',
-      name: 'joyce',
-      amount: '300',
+  const { data: transactions } = useQuery({
+    queryKey: ['transactions'],
+    queryFn: async () => {
+      const res = await axios.get('/api/transactions');
+      return res.data;
     },
-    {
-      id: '2',
-      code: 'abcde',
-      createdAt: 'mon 19 june 2023',
-      phone: '0797766669',
-      name: 'joyce',
-      amount: '300',
-    },
-    {
-      id: '3',
-      code: 'abcde',
-      createdAt: 'mon 19 june 2023',
-      phone: '0797766669',
-      name: 'joyce',
-      amount: '300',
-    },
-    {
-      id: '4',
-      code: 'abcde',
-      createdAt: 'mon 19 june 2023',
-      phone: '0797766669',
-      name: 'joyce',
-      amount: '300',
-    },
-    {
-      id: '5',
-      code: 'abcde',
-      createdAt: 'mon 19 june 2023',
-      phone: '0797766669',
-      name: 'joyce',
-      amount: '300',
-    },
-  ];
+  });
   async function handleDeleteTransaction() {}
   return (
     <div>
@@ -64,42 +31,55 @@ function TransactionsPage() {
       <table className="bg-gray-600 rounded-md  w-full mt-5">
         <thead>
           <tr>
-            <td>code</td>
+            <td>checkout_code</td>
+            <td>status</td>
             <td>amount</td>
-            <td>Name</td>
-
+            <td>Method</td>
             <td>Created At</td>
-
             <td>Phone</td>
-
             <td>Action</td>
           </tr>
         </thead>
 
         <tbody>
-          {transactions?.map((item) => (
+          {transactions?.map((item: any) => (
             <tr key={item?.id} className="">
-              <td className="">{item?.code}</td>
+              <td className="">{item?.checkout_request_id}</td>
+              <td
+                className={` font-medium p-2 ${
+                  item.status === 'waiting'
+                    ? 'text-yellow-600'
+                    : item.status === 'success'
+                    ? 'text-lime-600'
+                    : item.status === 'reversed'
+                    ? 'text-gray-400'
+                    : 'text-red-600'
+                }`}
+              >
+                {item?.status}
+              </td>
 
               <td className=" font-extralight">{item?.amount}</td>
-              <td className="">{item?.name}</td>
+              <td className="">{item?.method}</td>
 
               <td className="">
-                {new Date(item?.createdAt).toLocaleDateString()}
+                {new Date(item?.created_at).toDateString()}
+                <span> at {new Date(item?.created_at).getHours()}</span>
+                <span>:{new Date(item?.created_at).getMinutes()}</span>
               </td>
-              <td className="">{item?.phone}</td>
+              <td className="">{item?.phone_number}</td>
 
               <td>
                 <MdMore
                   className=""
                   size={24}
                   onClick={() =>
-                    selectedItem === item.id
+                    selectedItem === item?.id
                       ? setSelectedItem('')
-                      : setSelectedItem(item.id)
+                      : setSelectedItem(item?.id)
                   }
                 />
-                {selectedItem === item.id && (
+                {selectedItem === item?.id && (
                   <div className="flex flex-col gap-2 absolute bg-slate-800 rounded-md right-20 text-slate-200">
                     <button
                       onClick={handleDeleteTransaction}
