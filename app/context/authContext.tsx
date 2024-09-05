@@ -20,9 +20,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
   const [currentUser, setCurrentUser] = useState<
     AuthContextType['currentUser'] | any
   >(null);
-  const [authSession, setAuthSession] = useState<Session | null | undefined>(
-    null
-  );
+  const [authSession, setAuthSession] = useState<Session | any>(null);
 
   const supabase = createClient();
   useEffect(() => {
