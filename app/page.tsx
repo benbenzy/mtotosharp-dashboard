@@ -16,16 +16,16 @@ export default function Home() {
         </h2>
         <div className="flex flex-row gap-20 ">
           {currentUser ? (
+            <button onClick={async () => await supabase.auth.signOut()}>
+              <h2>logout</h2>
+            </button>
+          ) : (
             <Link
               className=" hover:bg-slate-300 hover:cursor-pointer h-5 "
               href={'/login'}
             >
-              <h2>logout</h2>
-            </Link>
-          ) : (
-            <button onClick={async () => await supabase.auth.signOut()}>
               <h2>login</h2>
-            </button>
+            </Link>
           )}
           <Link
             className=" hover:bg-slate-300 hover:cursor-pointer h-5 mr-2"
