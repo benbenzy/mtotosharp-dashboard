@@ -145,7 +145,8 @@ function Sidebar() {
 
         <div className=" flex-col flex">
           <span className=" font-bold capitalize">
-            {auth?.currentUser?.full_name?.split(' ')[0]}
+            {auth?.currentUser?.full_name?.split(' ')[0] ??
+              auth?.currentUser?.email?.split('@')[0]}
           </span>
           <span className=" font-thin text-slate-100">
             {auth?.currentUser?.group}

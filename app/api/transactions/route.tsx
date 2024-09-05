@@ -7,7 +7,8 @@ export async function GET() {
     const { data, error } = await supabase
       .from('transactions')
       .select('*')
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .limit(10);
     if (error) {
       console.log('error loading transaction', error.message);
       return NextResponse.json([], { status: 500 });

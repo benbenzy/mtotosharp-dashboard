@@ -3,10 +3,14 @@ import Link from 'next/link';
 import './ui/globals.css';
 import { useAuth } from './context/authContext';
 import { createClient } from '@/utils/supabase/client';
+import { redirect } from 'next/navigation';
 
 export default function Home() {
   const supabase = createClient();
   const { currentUser } = useAuth();
+  if (currentUser?.group == 'ADMIN') {
+    redirect('/dashboard');
+  }
   const RenderHeader = () => {
     return (
       <div className="flex flex-row justify-between items-center h-16">
@@ -14,6 +18,7 @@ export default function Home() {
           Mtoto<span className="text-red-500">Sharp</span>
           <span className="text-yellow-500"> Foundation</span>
         </h2>
+        <h2>{currentUser?.group}</h2>
         <div className="flex flex-row gap-20 ">
           {currentUser ? (
             <button onClick={async () => await supabase.auth.signOut()}>

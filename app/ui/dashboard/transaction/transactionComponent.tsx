@@ -12,7 +12,15 @@ function TransactionComponent({ item }: any) {
           src={'/noavatar.png'}
           className="rounded-full object-cover"
         />
-        {item?.phone_number}
+        {item?.checkout_request_id}
+      </td>
+
+      <td className="p-2">{item?.amount?.toLocaleString()}</td>
+
+      <td className="">
+        {new Date(item?.created_at).toDateString()}
+        <span> at {new Date(item?.created_at).getHours()}</span>
+        <span>:{new Date(item?.created_at).getMinutes()}</span>
       </td>
       <td
         className={` font-medium p-2 ${
@@ -26,13 +34,6 @@ function TransactionComponent({ item }: any) {
         }`}
       >
         {item?.status}
-      </td>
-      <td className="p-2">{item?.amount?.toLocaleString()}</td>
-
-      <td className="">
-        {new Date(item?.created_at).toDateString()}
-        <span> at {new Date(item?.created_at).getHours()}</span>
-        <span>:{new Date(item?.created_at).getMinutes()}</span>
       </td>
     </tr>
   );

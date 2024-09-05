@@ -32,11 +32,12 @@ function TransactionsPage() {
         <thead>
           <tr>
             <td>checkout_code</td>
-            <td>status</td>
+
             <td>amount</td>
             <td>Method</td>
             <td>Created At</td>
             <td>Phone</td>
+            <td>status</td>
             <td>Action</td>
           </tr>
         </thead>
@@ -45,6 +46,16 @@ function TransactionsPage() {
           {transactions?.map((item: any) => (
             <tr key={item?.id} className="">
               <td className="">{item?.checkout_request_id}</td>
+
+              <td className=" font-extralight">{item?.amount}</td>
+              <td className="">{item?.method}</td>
+
+              <td className="">
+                {new Date(item?.created_at).toDateString()}
+                <span> at {new Date(item?.created_at).getHours()}</span>
+                <span>:{new Date(item?.created_at).getMinutes()}</span>
+              </td>
+              <td className="">{item?.phone_number}</td>
               <td
                 className={` font-medium p-2 ${
                   item.status === 'waiting'
@@ -59,16 +70,6 @@ function TransactionsPage() {
                 {item?.status}
               </td>
 
-              <td className=" font-extralight">{item?.amount}</td>
-              <td className="">{item?.method}</td>
-
-              <td className="">
-                {new Date(item?.created_at).toDateString()}
-                <span> at {new Date(item?.created_at).getHours()}</span>
-                <span>:{new Date(item?.created_at).getMinutes()}</span>
-              </td>
-              <td className="">{item?.phone_number}</td>
-
               <td>
                 <MdMore
                   className=""
@@ -81,12 +82,6 @@ function TransactionsPage() {
                 />
                 {selectedItem === item?.id && (
                   <div className="flex flex-col gap-2 absolute bg-slate-800 rounded-md right-20 text-slate-200">
-                    <button
-                      onClick={handleDeleteTransaction}
-                      className="flex flex-row gap-1 items-center hover:bg-slate-600"
-                    >
-                      <MdDelete /> delete
-                    </button>
                     <Link
                       href={{
                         pathname: `/dashboard/users/`,

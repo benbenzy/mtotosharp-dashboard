@@ -65,7 +65,6 @@ export async function updateSession (request:NextRequest) {
     if (request.nextUrl.pathname !== '/') {
       return NextResponse.redirect(new URL("/", request.url))
     }
-    return response
   }
    // Fetch user profile to get the role
    const role = user?.role

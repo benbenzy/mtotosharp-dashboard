@@ -4,8 +4,15 @@ import Card from '../ui/dashboard/card/card';
 import Rightbar from '../ui/dashboard/rightbar/rightbar';
 import Transaction from '../ui/dashboard/transaction/transaction';
 import Chart from '../ui/dashboard/chart/chart';
-import { MdAnalytics, MdPeople, MdSupervisedUserCircle } from 'react-icons/md';
+import { MdAnalytics, MdSupervisedUserCircle } from 'react-icons/md';
+import { redirect } from 'next/navigation';
+import { useAuth } from '../context/authContext';
 function DashBoardPage() {
+  const { currentUser } = useAuth();
+  if (!currentUser || currentUser?.group != 'ADMIN') {
+    redirect('/');
+  }
+
   return (
     <div className=" flex flex-row gap-5 mt-5">
       <div className=" flex flex-1 flex-col gap-5 ">

@@ -35,11 +35,10 @@ function Transaction() {
       <table className="w-full">
         <thead className="p-2">
           <tr>
-            <td className="p-2">phone</td>
-            <td className="p-2">status</td>
+            <td className="p-2">id</td>
             <td className="p-2">amount</td>
             <td className="p-2">date</td>
-            <td className="p-2">action</td>
+            <td className="p-2">status</td>
           </tr>
         </thead>
         <tbody>

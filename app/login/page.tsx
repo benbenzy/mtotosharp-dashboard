@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { supabaseLogin } from '../../utils/supabase/actions';
 
 async function LoginPage() {

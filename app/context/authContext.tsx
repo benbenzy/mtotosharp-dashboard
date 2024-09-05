@@ -13,6 +13,8 @@ type AuthContextType = {
     group: string;
     avatar_url: string;
   };
+  authSession: any;
+  logOut: any;
 };
 
 const AuthContext = createContext<AuthContextType | any>(null);
@@ -23,14 +25,20 @@ export const AuthProvider = ({ children }: { children: any }) => {
   const [authSession, setAuthSession] = useState<Session | any>(null);
 
   const supabase = createClient();
+  const logout = async () => {
+    await supabase.auth.signOut();
+    setCurrentUser(null);
+  };
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setAuthSession(session);
-    });
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        setAuthSession(session ?? null);
+      }
+    );
 
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setAuthSession(session);
-    });
+    return () => {
+      authListener?.subscription.unsubscribe();
+    };
   }, []);
   useEffect(() => {
     const user = async () => {
@@ -44,12 +52,14 @@ export const AuthProvider = ({ children }: { children: any }) => {
       }
     };
     user();
-  }, []);
+  }, [authSession]);
 
   return (
     <AuthContext.Provider
       value={{
         currentUser,
+        authSession,
+        logout,
       }}
     >
       {children}
