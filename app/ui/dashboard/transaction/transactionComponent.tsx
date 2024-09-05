@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 function TransactionComponent({ item }: any) {
   return (
-    <tr key={item?.id} className="mt-2">
+    <tr className="mt-2">
       <td className="flex flex-row gap-2 p-2 items-center">
         <Image
           height={30}

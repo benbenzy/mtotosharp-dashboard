@@ -43,7 +43,7 @@ function Transaction() {
           </tr>
         </thead>
         <tbody>
-          {transactions?.map((item, index) => (
+          {transactions?.map((item) => (
             <TransactionComponent key={item.id} item={item} />
           ))}
         </tbody>

@@ -52,7 +52,7 @@ function MessagePage() {
       setMessage(''), setEmail(''), setSelectedOption(null);
     },
   });
-  // const disabled = !selectedOption || message == '' || email == '';
+  const disabled = !selectedOption || message == '' || email == '';
   return (
     <div className="flex flex-1 items-center justify-center h-full">
       <div className="flex  flex-col gap-2 w-1/2">
@@ -113,7 +113,7 @@ function MessagePage() {
           ></textarea>
         </div>
         <button
-          //disabled={disabled}
+          disabled={disabled}
           onClick={() => postMessage(postm)}
           className="bg-blue-300 w-full rounded-lg h-12"
         >
