@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { MdRadioButtonChecked, MdRadioButtonUnchecked } from 'react-icons/md';
 
 function MessagePage() {
-  const [selectedOption, setSelectedOption] = useState<null>(null);
+  const [selectedOption, setSelectedOption] = useState<null | any>(null);
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const options = [
@@ -36,7 +36,7 @@ function MessagePage() {
     message,
     request: selectedOption?.value,
   };
-  const postMessage = (data) => {
+  const postMessage = (data: any) => {
     handlePostMessage(data);
   };
   const {
