@@ -13,7 +13,7 @@ export async function DELETE(req: NextRequest) {
   }
   return NextResponse.json('succes', { status: 200 });
 }
-export async function UPDATE(req: NextRequest) {
+export async function PATCH(req: NextRequest) {
   const supabase = createClient();
   const data = await req.json();
   const id = req.nextUrl.pathname.split('/').pop();
