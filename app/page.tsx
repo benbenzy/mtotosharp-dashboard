@@ -3,14 +3,11 @@ import Link from 'next/link';
 import './ui/globals.css';
 import { useAuth } from './context/authContext';
 import { createClient } from '@/utils/supabase/client';
-import { redirect } from 'next/navigation';
 
 export default function Home() {
   const supabase = createClient();
   const { currentUser } = useAuth();
-  if (currentUser?.group == 'ADMIN') {
-    redirect('/dashboard');
-  }
+
   const RenderHeader = () => {
     return (
       <div className="flex flex-row justify-between items-center h-16">

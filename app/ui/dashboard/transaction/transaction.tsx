@@ -21,7 +21,7 @@ function Transaction() {
     queryKey: ['transactions'],
     queryFn: async () => {
       const res = await axios.get('/api/transactions');
-      return res.data;
+      return res?.data;
     },
   });
   return (
@@ -42,9 +42,10 @@ function Transaction() {
           </tr>
         </thead>
         <tbody>
-          {transactions?.map((item) => (
-            <TransactionComponent key={item.id} item={item} />
-          ))}
+          {Array.isArray(transactions) &&
+            transactions?.map((item) => (
+              <TransactionComponent key={item.id} item={item} />
+            ))}
         </tbody>
       </table>
     </div>

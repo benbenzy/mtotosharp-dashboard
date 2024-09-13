@@ -5,14 +5,8 @@ import Rightbar from '../ui/dashboard/rightbar/rightbar';
 import Transaction from '../ui/dashboard/transaction/transaction';
 import Chart from '../ui/dashboard/chart/chart';
 import { MdAnalytics, MdSupervisedUserCircle } from 'react-icons/md';
-import { redirect } from 'next/navigation';
-import { useAuth } from '../context/authContext';
-function DashBoardPage() {
-  const { currentUser } = useAuth();
-  if (!currentUser || currentUser?.group != 'ADMIN') {
-    redirect('/');
-  }
 
+function DashBoardPage() {
   return (
     <div className=" flex flex-row gap-5 mt-5">
       <div className=" flex flex-1 flex-col gap-5 ">

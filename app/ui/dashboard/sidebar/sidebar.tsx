@@ -116,6 +116,26 @@ function Sidebar() {
         },
       ],
     },
+    {
+      title: 'Legal',
+      list: [
+        {
+          title: 'Terms',
+          path: '/dashboard/legal/terms',
+          icon: <MdOutlineSettings />,
+        },
+        {
+          title: 'Policy',
+          path: '/dashboard/legal/policy',
+          icon: <MdHelpCenter />,
+        },
+        {
+          title: 'Governance',
+          path: '/dashboard/legal/governance',
+          icon: <MdHelpCenter />,
+        },
+      ],
+    },
   ];
   return (
     <div className="sticky top-10">

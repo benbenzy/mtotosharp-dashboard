@@ -43,60 +43,61 @@ function TransactionsPage() {
         </thead>
 
         <tbody>
-          {transactions?.map((item: any) => (
-            <tr key={item?.id} className="">
-              <td className="">{item?.checkout_request_id}</td>
+          {Array.isArray(transactions) &&
+            transactions?.map((item: any) => (
+              <tr key={item?.id} className="">
+                <td className="">{item?.checkout_request_id}</td>
 
-              <td className=" font-extralight">{item?.amount}</td>
-              <td className="">{item?.method}</td>
+                <td className=" font-extralight">{item?.amount}</td>
+                <td className="">{item?.method}</td>
 
-              <td className="">
-                {new Date(item?.created_at).toDateString()}
-                <span> at {new Date(item?.created_at).getHours()}</span>
-                <span>:{new Date(item?.created_at).getMinutes()}</span>
-              </td>
-              <td className="">{item?.phone_number}</td>
-              <td
-                className={` font-medium p-2 ${
-                  item.status === 'waiting'
-                    ? 'text-yellow-600'
-                    : item.status === 'success'
-                    ? 'text-lime-600'
-                    : item.status === 'reversed'
-                    ? 'text-gray-400'
-                    : 'text-red-600'
-                }`}
-              >
-                {item?.status}
-              </td>
+                <td className="">
+                  {new Date(item?.created_at).toDateString()}
+                  <span> at {new Date(item?.created_at).getHours()}</span>
+                  <span>:{new Date(item?.created_at).getMinutes()}</span>
+                </td>
+                <td className="">{item?.phone_number}</td>
+                <td
+                  className={` font-medium p-2 ${
+                    item.status === 'waiting'
+                      ? 'text-yellow-600'
+                      : item.status === 'success'
+                      ? 'text-lime-600'
+                      : item.status === 'reversed'
+                      ? 'text-gray-400'
+                      : 'text-red-600'
+                  }`}
+                >
+                  {item?.status}
+                </td>
 
-              <td>
-                <MdMore
-                  className=""
-                  size={24}
-                  onClick={() =>
-                    selectedItem === item?.id
-                      ? setSelectedItem('')
-                      : setSelectedItem(item?.id)
-                  }
-                />
-                {selectedItem === item?.id && (
-                  <div className="flex flex-col gap-2 absolute bg-slate-800 rounded-md right-20 text-slate-200">
-                    <Link
-                      href={{
-                        pathname: `/dashboard/users/`,
-                        query: { id: item.id },
-                      }}
-                    >
-                      <button className="flex flex-row gap-1 items-center  hover:bg-slate-600">
-                        <MdRemoveRedEye /> view
-                      </button>
-                    </Link>
-                  </div>
-                )}
-              </td>
-            </tr>
-          ))}
+                <td>
+                  <MdMore
+                    className=""
+                    size={24}
+                    onClick={() =>
+                      selectedItem === item?.id
+                        ? setSelectedItem('')
+                        : setSelectedItem(item?.id)
+                    }
+                  />
+                  {selectedItem === item?.id && (
+                    <div className="flex flex-col gap-2 absolute bg-slate-800 rounded-md right-20 text-slate-200">
+                      <Link
+                        href={{
+                          pathname: `/dashboard/users/`,
+                          query: { id: item.id },
+                        }}
+                      >
+                        <button className="flex flex-row gap-1 items-center  hover:bg-slate-600">
+                          <MdRemoveRedEye /> view
+                        </button>
+                      </Link>
+                    </div>
+                  )}
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>

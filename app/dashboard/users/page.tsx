@@ -134,58 +134,60 @@ function UsersPage({ searchParams }: props) {
         </thead>
 
         <tbody>
-          {users?.map((item) => (
-            <tr key={item?.id} className="mt-2">
-              <td className=" font-extralight capitalize">
-                {item?.user_metadata?.firstName} {item?.user_metadata?.lastName}
-              </td>
+          {Array.isArray(users) &&
+            users?.map((item) => (
+              <tr key={item?.id} className="mt-2">
+                <td className=" font-extralight capitalize">
+                  {item?.user_metadata?.firstName}{' '}
+                  {item?.user_metadata?.lastName}
+                </td>
 
-              <td className="">{item?.email}</td>
-              <td className="">{formatDate(item?.created_at)}</td>
-              <td className="">{formatDate(item?.last_sign_in_at)}</td>
+                <td className="">{item?.email}</td>
+                <td className="">{formatDate(item?.created_at)}</td>
+                <td className="">{formatDate(item?.last_sign_in_at)}</td>
 
-              <td className="">{item?.phone}</td>
-              <td className="">{item?.role}</td>
-              <td>
-                <MdMoreHoriz
-                  className=""
-                  size={24}
-                  onClick={() =>
-                    selectedUser === item.id
-                      ? setSelectedUser('')
-                      : setSelectedUser(item.id)
-                  }
-                />
-                {selectedUser === item.id && (
-                  <div className="flex flex-col gap-2 absolute bg-slate-800 rounded-md right-20 text-slate-200">
-                    <Link
-                      href={{
-                        pathname: `/dashboard/users/${item.id}`,
-                        query: { id: item.id },
-                      }}
-                    >
+                <td className="">{item?.phone}</td>
+                <td className="">{item?.role}</td>
+                <td>
+                  <MdMoreHoriz
+                    className=""
+                    size={24}
+                    onClick={() =>
+                      selectedUser === item.id
+                        ? setSelectedUser('')
+                        : setSelectedUser(item.id)
+                    }
+                  />
+                  {selectedUser === item.id && (
+                    <div className="flex flex-col gap-2 absolute bg-slate-800 rounded-md right-20 text-slate-200">
+                      <Link
+                        href={{
+                          pathname: `/dashboard/users/${item.id}`,
+                          query: { id: item.id },
+                        }}
+                      >
+                        <button className="flex flex-row gap-1 items-center  hover:bg-slate-600">
+                          <MdRemoveRedEye /> view
+                        </button>
+                      </Link>
+
                       <button className="flex flex-row gap-1 items-center  hover:bg-slate-600">
-                        <MdRemoveRedEye /> view
+                        <MdMessage /> message
                       </button>
-                    </Link>
-
-                    <button className="flex flex-row gap-1 items-center  hover:bg-slate-600">
-                      <MdMessage /> message
-                    </button>
-                    <button className="flex flex-row gap-1 items-center  hover:bg-slate-600">
-                      <MdPanoramaFishEye /> disable
-                    </button>
-                    <button
-                      onClick={handleDeleteUser}
-                      className="flex flex-row gap-1 items-center hover:bg-slate-600"
-                    >
-                      <MdDelete /> delete
-                    </button>
-                  </div>
-                )}
-              </td>
-            </tr>
-          ))}
+                      <button className="flex flex-row gap-1 items-center  hover:bg-slate-600">
+                        <MdPanoramaFishEye /> disable
+                      </button>
+                      <button
+                        onClick={handleDeleteUser}
+                        className="flex flex-row gap-1 items-center hover:bg-slate-600"
+                      >
+                        <MdDelete /> delete
+                      </button>
+                    </div>
+                  )}
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
       {isLoading && (
