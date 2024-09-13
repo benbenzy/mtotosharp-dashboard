@@ -78,7 +78,7 @@ function TermsPage() {
       {Array.isArray(terms) &&
         terms?.map((item) => {
           return (
-            <div className="mt-5">
+            <div key={item?.id} className="mt-5">
               <div className="flex flex-row justify-between">
                 <h2 className=" font-bold underline capitalize">
                   {item?.title}
