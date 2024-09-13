@@ -31,7 +31,7 @@ function PolicyPage() {
       {Array.isArray(terms) &&
         terms.map((item) => {
           return (
-            <div className=" w-4/5 mt-5">
+            <div key={item?.id} className=" w-4/5 mt-5">
               <div className="flex flex-row gap-5">
                 <h2 className=" font-bold capitalize underline">
                   {item?.title}
