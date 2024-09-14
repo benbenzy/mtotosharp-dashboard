@@ -17,12 +17,10 @@ type Terms = {
   message: string;
   category: string;
 };
-
-function CreateTermsPage({ params }: any) {
+const CreateTermsForm = () => {
   const supabase = createClient();
   const searchParams = useSearchParams();
-  const id = params?.id;
-
+  const id = searchParams.get('id');
   const requestType = searchParams.get('requestType');
   const category = searchParams.get('category');
   const { register, handleSubmit } = useForm<termsFormPost>();
@@ -65,91 +63,88 @@ function CreateTermsPage({ params }: any) {
     isPending: editTermsPending,
     isSuccess: editTermsSuccess,
   } = useMutation({ mutationFn: async () => {} });
-
   return (
     <div>
-      <Suspense>
-        <form onSubmit={(e) => e.preventDefault()}>
-          <label className="form-control w-full ">
-            <div className="label">
-              <span className="label-text text-slate-100">title?</span>
-            </div>
-            <input
-              {...register('id')}
-              type="text"
-              value={subTopic?.id}
-              placeholder="id"
-              className="input input-bordered w-full text-slate-900  hidden"
-            />
+      <form onSubmit={(e) => e.preventDefault()}>
+        <label className="form-control w-full ">
+          <div className="label">
+            <span className="label-text text-slate-100">title?</span>
+          </div>
+          <input
+            {...register('id')}
+            type="text"
+            value={subTopic?.id}
+            placeholder="id"
+            className="input input-bordered w-full text-slate-900  hidden"
+          />
 
-            <input
-              {...register('title')}
-              value={subTopic?.title}
-              onChange={(e) => {
-                setSubTopic({ ...subTopic, title: e.target.value });
-              }}
-              type="text"
-              placeholder="title"
-              className="input input-bordered w-full dark:bg-slate-800 dark:text-slate-100 text-slate-900"
-            />
-          </label>
+          <input
+            {...register('title')}
+            value={subTopic?.title}
+            onChange={(e) => {
+              setSubTopic({ ...subTopic, title: e.target.value });
+            }}
+            type="text"
+            placeholder="title"
+            className="input input-bordered w-full dark:bg-slate-800 dark:text-slate-100 text-slate-900"
+          />
+        </label>
 
-          <label className="form-control w-full ">
-            <div className="label">
-              <span className="label-text text-slate-100">body</span>
-            </div>
-            <textarea
-              {...register('message')}
-              value={subTopic?.message}
-              onChange={(e) => {
-                setSubTopic({ ...subTopic, message: e.target.value });
-              }}
-              rows={10}
-              placeholder="body content"
-              className="textarea textarea-bordered textarea-lg w-full  dark:bg-slate-800 dark:text-slate-100 text-slate-900"
-            ></textarea>
-          </label>
+        <label className="form-control w-full ">
+          <div className="label">
+            <span className="label-text text-slate-100">body</span>
+          </div>
+          <textarea
+            {...register('message')}
+            value={subTopic?.message}
+            onChange={(e) => {
+              setSubTopic({ ...subTopic, message: e.target.value });
+            }}
+            rows={10}
+            placeholder="body content"
+            className="textarea textarea-bordered textarea-lg w-full  dark:bg-slate-800 dark:text-slate-100 text-slate-900"
+          ></textarea>
+        </label>
 
-          {createTermsError && (
-            <div className="toast">
-              <div className="alert alert-error">
-                <span>failed to create </span>
-              </div>
+        {createTermsError && (
+          <div className="toast">
+            <div className="alert alert-error">
+              <span>failed to create </span>
             </div>
-          )}
-          {createTermsPending && (
-            <progress className="progress w-56">submit progress...</progress>
-          )}
-          {createTermsSuccess && (
-            <div className="toast">
-              <div className="alert alert-success">
-                <span>terms created</span>
-              </div>
+          </div>
+        )}
+        {createTermsPending && (
+          <progress className="progress w-56">submit progress...</progress>
+        )}
+        {createTermsSuccess && (
+          <div className="toast">
+            <div className="alert alert-success">
+              <span>terms created</span>
             </div>
-          )}
-          {editTermsError && (
-            <div className="toast">
-              <div className="alert alert-error">
-                <span>failed to update chapter</span>
-              </div>
+          </div>
+        )}
+        {editTermsError && (
+          <div className="toast">
+            <div className="alert alert-error">
+              <span>failed to update chapter</span>
             </div>
-          )}
-          {editTermsPending && (
-            <div className="toast">
-              <div className="alert alert-success">
-                <span>submitting update ... </span>
-              </div>
+          </div>
+        )}
+        {editTermsPending && (
+          <div className="toast">
+            <div className="alert alert-success">
+              <span>submitting update ... </span>
             </div>
-          )}
-          {editTermsSuccess && (
-            <div className="toast">
-              <div className="alert alert-success">
-                <span>chapter updated </span>
-              </div>
+          </div>
+        )}
+        {editTermsSuccess && (
+          <div className="toast">
+            <div className="alert alert-success">
+              <span>chapter updated </span>
             </div>
-          )}
-        </form>
-      </Suspense>
+          </div>
+        )}
+      </form>
       {requestType === 'edit' && (
         <button
           onClick={(e) => {
@@ -175,6 +170,14 @@ function CreateTermsPage({ params }: any) {
         </button>
       )}
     </div>
+  );
+};
+
+function CreateTermsPage() {
+  return (
+    <Suspense>
+      <CreateTermsForm />
+    </Suspense>
   );
 }
 
