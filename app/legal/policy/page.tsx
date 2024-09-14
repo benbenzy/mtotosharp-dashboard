@@ -11,7 +11,7 @@ function PolicyPage() {
       const { data, error } = await supabase
         .from('terms')
         .select('*')
-        .order('index', { ascending: false });
+        .order('index', { ascending: true });
       if (error) {
         console.log('failed to load terms');
       }
