@@ -15,9 +15,9 @@ interface PasswordSignInProps {
 
 export default function PasswordSignIn({
   allowEmail,
-  redirectMethod
+  redirectMethod,
 }: PasswordSignInProps) {
-  const router = redirectMethod === 'client' ? useRouter() : null;
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -68,7 +68,7 @@ export default function PasswordSignIn({
       </form>
       <p>
         <Link href="/signin/forgot_password" className="font-light text-sm">
-          Forgot your password?
+          Forgot your password
         </Link>
       </p>
       {allowEmail && (
@@ -80,7 +80,7 @@ export default function PasswordSignIn({
       )}
       <p>
         <Link href="/signin/signup" className="font-light text-sm">
-          Don't have an account? Sign up
+          Sign up for new account
         </Link>
       </p>
     </div>

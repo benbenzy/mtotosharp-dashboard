@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
-const Modal = ({ children, show, onclose }) => {
+const Modal = ({ children, show, onclose }: any) => {
   return (
     <dialog id="my_modal_3" className={`modal ${show ? 'modal-open' : ''}`}>
       <div className="modal-box">
@@ -26,7 +26,7 @@ const Modal = ({ children, show, onclose }) => {
 function TransactionsDetails() {
   const queryClient = useQueryClient();
   const [showModal, setShowModal] = useState(false);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<any>(null);
   const supabase = createClient();
   const pathName = usePathname();
   const id = pathName.split('/').pop();
@@ -47,7 +47,7 @@ function TransactionsDetails() {
   const handleClose = () => {
     setShowModal(false);
   };
-  const updateTransaction = (item) => {
+  const updateTransaction = (item: any) => {
     submitUpdate(item);
   };
   const {
@@ -57,7 +57,7 @@ function TransactionsDetails() {
     error,
     isSuccess,
   } = useMutation({
-    mutationFn: async (data) => {
+    mutationFn: async (data: any) => {
       const { data: status, error } = await supabase
         .from('transactions')
         .update({

@@ -15,7 +15,7 @@ interface SignUpProps {
 }
 
 export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
-  const router = redirectMethod === 'client' ? useRouter() : null;
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -64,7 +64,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
           </Button>
         </div>
       </form>
-      <p>Already have an account?</p>
+      <p>Already have an account</p>
       <p>
         <Link href="/signin/password_signin" className="font-light text-sm">
           Sign in with email and password
