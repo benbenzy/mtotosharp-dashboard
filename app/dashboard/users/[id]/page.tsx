@@ -38,7 +38,11 @@ function SingleUserPage() {
   const { data: UserData } = useQuery({
     queryKey: ['getUser'],
     queryFn: async () => {
-      const user = await axios.get(`/api/users/${userId}`);
+      const user = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
       return user.data;
     },
   });

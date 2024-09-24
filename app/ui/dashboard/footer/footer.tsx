@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react';
 
 function Footer() {
   return (
-    <div className="flex flex-row justify-between mt-20">
+    <div className="flex flex-row justify-between p-4">
       <div className="font-semibold text-slate-400 text-xs">
-        Mtoto<span className="text-red-400">Sharp</span>{" "}
+        Mtoto<span className="text-red-400">Sharp</span>{' '}
         <span className="text-yellow-600">Foundation </span>
       </div>
       <div className="text-xs text text-slate-400">

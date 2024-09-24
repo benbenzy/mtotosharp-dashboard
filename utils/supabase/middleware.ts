@@ -72,12 +72,12 @@ export async function updateSession (request:NextRequest) {
   //   return NextResponse.redirect(new URL("/", request.url))
   // }
  
-   if (role === 'authenticated' && !request.nextUrl.pathname.startsWith("/dashboard")) {
-     return NextResponse.redirect(new URL("/dashboard", request.url))
-   }
-   if (role === 'author' && !request.nextUrl.pathname.startsWith("/author")) {
-     return NextResponse.redirect(new URL("/author", request.url))
-   }
+  //  if (role === 'authenticated' && !request.nextUrl.pathname.startsWith("/dashboard")) {
+  //    return NextResponse.redirect(new URL("/dashboard", request.url))
+  //  }
+  //  if (role === 'author' && !request.nextUrl.pathname.startsWith("/author")) {
+  //    return NextResponse.redirect(new URL("/author", request.url))
+  //  }
  
 
   return response

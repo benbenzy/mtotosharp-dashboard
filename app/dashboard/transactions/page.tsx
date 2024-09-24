@@ -1,5 +1,6 @@
 'use client';
 import Search from '@/app/ui/dashboard/search/search';
+import { createClient } from '@/utils/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import Link from 'next/link';
@@ -7,11 +8,12 @@ import React, { Suspense, useState } from 'react';
 import { MdDelete, MdMore, MdRemoveRedEye } from 'react-icons/md';
 
 function TransactionsPage() {
+  const supabase = createClient();
   const [selectedItem, setSelectedItem] = useState('');
   const { data: transactions } = useQuery({
     queryKey: ['transactions'],
     queryFn: async () => {
-      const res = await axios.get('/api/transactions');
+      const res = await supabase.from('transactions').select('*');
       return res.data;
     },
   });
@@ -22,7 +24,7 @@ function TransactionsPage() {
         <Suspense>
           <Search placeholder="enter transaction code" />
         </Suspense>
-        <Link href={'/dashboard/users/add'}>
+        <Link href={`/dashboard/transactions`}>
           <button className="p-2 bg-slate-700 hover:bg-slate-500 cursor-pointer rounded-md text-slate-200 border-none">
             Add transaction
           </button>
@@ -84,8 +86,9 @@ function TransactionsPage() {
                   {selectedItem === item?.id && (
                     <div className="flex flex-col gap-2 absolute bg-slate-800 rounded-md right-20 text-slate-200">
                       <Link
+                        className="items-center  hover:bg-slate-600"
                         href={{
-                          pathname: `/dashboard/users/`,
+                          pathname: `/dashboard/transactions/${item.id}`,
                           query: { id: item.id },
                         }}
                       >

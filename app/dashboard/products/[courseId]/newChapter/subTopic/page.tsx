@@ -85,11 +85,16 @@ const NewSubTopic = () => {
     isSuccess: editChapterSuccess,
     error: editError,
   } = useMutation({
-    mutationFn: async (newChapter) => {
-      await axios.patch(
-        `/api/courses/${courseId}/chapters/${chapterId}/subTopics/${subTopicId}`,
-        newChapter
-      );
+    mutationFn: async (newChapter: any) => {
+      const { data, error } = await supabase
+        .from('sub_topics')
+        .update({ title: newChapter?.title, content: newChapter?.content })
+        .eq('id', subTopicId)
+        .select();
+      if (error) {
+        throw new Error('failed to update ');
+      }
+      return data;
     },
   });
 
@@ -100,11 +105,19 @@ const NewSubTopic = () => {
     isSuccess: createChapterSuccess,
     error,
   } = useMutation({
-    mutationFn: async (newChapter) => {
-      await axios.post(
-        `/api/courses/${courseId}/chapters/${chapterId}/subTopics`,
-        newChapter
-      );
+    mutationFn: async (newChapter: any) => {
+      const { data, error } = await supabase
+        .from('sub_topics')
+        .insert({
+          title: newChapter?.title,
+          content: newChapter?.content,
+          chapter_id: newChapter?.chapterId,
+        })
+        .select('*');
+      if (error) {
+        throw new Error('failed to create chapter');
+      }
+      return data;
     },
     onSuccess: () => {
       setSubTopic({

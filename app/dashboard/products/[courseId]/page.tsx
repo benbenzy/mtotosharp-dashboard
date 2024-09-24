@@ -1,11 +1,11 @@
 'use client';
-import { ActionButton } from '@/app/ui/dashboard/ActionButton/ActionButton';
 import RemoteImage from '@/app/ui/dashboard/remoteImage/RemoteImage';
 import { createClient } from '@/utils/supabase/client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 import React, { FC, useEffect, useRef, useState } from 'react';
 import {
@@ -23,7 +23,8 @@ interface CourseDetailsProps {
   };
 }
 
-const CourseDeatilsPage: FC<CourseDetailsProps> = ({ params }) => {
+const CourseDeatilsPage: FC<CourseDetailsProps> = () => {
+  const pathname = usePathname();
   const supabase = createClient();
   const [image, setImage] = useState<File | any>(null);
   const [course, setCourse] = useState<any>();
@@ -31,12 +32,20 @@ const CourseDeatilsPage: FC<CourseDetailsProps> = ({ params }) => {
   const [selectedChapter, setSelectedChapter] = useState('');
   const [uploading, setUploading] = useState(false);
   const imageRef = useRef<any>();
+  const id = pathname.split('/').pop();
 
   const { data } = useQuery({
-    queryKey: ['course', params?.courseId],
+    queryKey: ['course', id],
     queryFn: async () => {
-      const res = await axios.get(`/api/courses/${params.courseId}`);
-      return res.data;
+      const { data: loadCourse, error } = await supabase
+        .from('courses')
+        .select('*,chapters(*)')
+        .eq('id', id)
+        .single();
+      if (error) {
+        console.log('failed to get course by id client');
+      }
+      return loadCourse;
     },
   });
   useEffect(() => {
@@ -76,8 +85,21 @@ const CourseDeatilsPage: FC<CourseDetailsProps> = ({ params }) => {
     isPending: updating,
     isSuccess: updatesuccess,
   } = useMutation({
-    mutationFn: async (course) => {
-      await axios.patch(`/api/courses/${params.courseId}`, course);
+    mutationFn: async (course: any) => {
+      const { data, error } = await supabase
+        .from('courses')
+        .update({
+          title: course?.title,
+          description: course?.description,
+          price: course?.price,
+          audience: course?.audience,
+          duration: course?.duration,
+        })
+        .eq('id', course?.id);
+      if (error) {
+        throw new Error('error upadating course');
+      }
+      return data;
     },
   });
 
@@ -94,9 +116,7 @@ const CourseDeatilsPage: FC<CourseDetailsProps> = ({ params }) => {
     isSuccess: deletesuccess,
   } = useMutation({
     mutationFn: async () => {
-      await axios.delete(
-        `/api/courses/${params.courseId}/chapters/${selectedChapter}`
-      );
+      await axios.delete(`/api/courses/${id}/chapters/${selectedChapter}`);
     },
   });
   const {
@@ -106,17 +126,23 @@ const CourseDeatilsPage: FC<CourseDetailsProps> = ({ params }) => {
   } = useMutation({
     mutationFn: async ({ title }: { title: string }) => {
       try {
-        await axios.post(`/api/courses/${params?.courseId}/chapters`, {
-          title,
-          courseId: params.courseId,
-        });
-        console.log('uploaded chapter');
+        const { data, error } = await supabase
+          .from('chapters')
+          .insert({
+            title,
+            course_id: course?.id,
+          })
+          .select('*');
+        if (error) {
+          throw new Error('failed to create chapter');
+        }
+        return data;
       } catch (error) {
         throw new Error('failed to upload chapter');
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['course', params?.courseId] });
+      queryClient.invalidateQueries({ queryKey: ['course', id] });
     },
   });
   function createChapter() {
@@ -312,16 +338,18 @@ const CourseDeatilsPage: FC<CourseDetailsProps> = ({ params }) => {
           New Chapter
         </button>
       </div>
-      <table className="w-full">
+      <table className="table table-xs">
         <thead>
           <tr>
-            <td>title</td> <td>createdAt</td> <td>reviewed</td>
-            <td>completed</td> <td>actions</td>
+            <th></th>
+            <th>title</th> <th>createdAt</th> <th>reviewed</th>
+            <th>completed</th> <th>actions</th>
           </tr>
         </thead>
         <tbody>
-          {course?.chapters?.map((item: any, index: Number) => (
+          {course?.chapters?.map((item: any, index: number) => (
             <tr key={item.id}>
+              <td>{index + 1}</td>
               <td>
                 <div>{item?.title}</div>
               </td>
@@ -355,10 +383,10 @@ const CourseDeatilsPage: FC<CourseDetailsProps> = ({ params }) => {
                   <div className="flex flex-col gap-2 absolute bg-slate-700">
                     <Link
                       href={{
-                        pathname: `/dashboard/products/${params.courseId}/newChapter`,
+                        pathname: `/dashboard/products/${id}/newChapter`,
                         query: {
                           requestType: 'edit',
-                          courseId: params.courseId,
+                          courseId: id,
                           chapterId: selectedChapter,
                         },
                       }}

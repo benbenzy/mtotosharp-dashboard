@@ -1,6 +1,7 @@
 'use client';
 import Pagination from '@/app/ui/dashboard/pagination/pagination';
 import Search from '@/app/ui/dashboard/search/search';
+import { createClient } from '@/utils/supabase/client';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import Link from 'next/link';
@@ -31,6 +32,7 @@ export type supabaseUser = {
   user_metadata: { firstName: string; lastName: string };
 };
 function UsersPage({ searchParams }: props) {
+  const supabase = createClient();
   const q = searchParams?.q || '';
   const page = searchParams.page;
   const [selectedUser, setSelectedUser] = useState('');
@@ -52,11 +54,14 @@ function UsersPage({ searchParams }: props) {
     isLoading,
     isError,
     error,
-  } = useQuery<supabaseUser[]>({
+  } = useQuery({
     queryKey: ['users'],
     queryFn: async () => {
-      const res = await axios.get('/api/users');
-      return res.data;
+      const { data, error } = await supabase.from('profiles').select('*');
+      if (error) {
+        console.log('failed to get users client');
+      }
+      return data;
     },
   });
   function formatDate(dat: Date) {
@@ -119,17 +124,15 @@ function UsersPage({ searchParams }: props) {
           </div>
         </div>
       )}
-      <table className="bg-gray-600 rounded-md  w-full mt-5 ">
+      <table className="table table-xs ">
         <thead>
           <tr>
-            <td>Name</td>
-
-            <td>Email</td>
-            <td>Created At</td>
-            <td>Last login</td>
-            <td>Phone</td>
-            <td>Role</td>
-            <td>Action</td>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Created At</th>
+            <th>Phone</th>
+            <th>Role</th>
+            <th>Action</th>
           </tr>
         </thead>
 
@@ -137,17 +140,11 @@ function UsersPage({ searchParams }: props) {
           {Array.isArray(users) &&
             users?.map((item) => (
               <tr key={item?.id} className="mt-2">
-                <td className=" font-extralight capitalize">
-                  {item?.user_metadata?.firstName}{' '}
-                  {item?.user_metadata?.lastName}
-                </td>
-
+                <td className="">{item?.full_name}</td>
                 <td className="">{item?.email}</td>
                 <td className="">{formatDate(item?.created_at)}</td>
-                <td className="">{formatDate(item?.last_sign_in_at)}</td>
-
                 <td className="">{item?.phone}</td>
-                <td className="">{item?.role}</td>
+                <td className="">{item?.group}</td>
                 <td>
                   <MdMoreHoriz
                     className=""

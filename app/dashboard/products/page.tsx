@@ -87,15 +87,13 @@ function ProductsPage() {
           </div>
         </div>
       )}
-      <table className="bg-gray-600 rounded-md  w-full mt-5 p-4 border-collapse table-auto border-spacing-2">
+      <table className="bg-gray-600 rounded-md table w-full mt-5 p-4  ">
         <thead>
           <tr>
             <td>Course</td>
             <td>description</td>
-
             <td>Status</td>
             <td>Editor</td>
-
             <td>Price</td>
             <td>Action</td>
           </tr>
@@ -103,7 +101,7 @@ function ProductsPage() {
         <tbody>
           {Array.isArray(courses) &&
             courses?.map((item: any) => (
-              <tr key={item?.id} className="m-5 hover  border border-slate-100">
+              <tr key={item?.id} className="m-5 hover  ">
                 <td className="w-32">
                   <div className="flex items-center gap-3">
                     <RemoteImage
@@ -117,73 +115,11 @@ function ProductsPage() {
                   </div>
                 </td>
                 <td className="w-1/3">
-                  {' '}
                   <div className="flex flex-col gap-1 ">
                     <div className="flex flex-row justify-between">
                       <h3 className="text-lg">{item?.title}</h3>{' '}
-                      {activeIndex === item.id ? (
-                        <MdArrowForwardIos
-                          size={24}
-                          className=" hover:bg-gray-300 rounded-full"
-                          onClick={() =>
-                            activeIndex === item.id
-                              ? setActiveIndex('')
-                              : setActiveIndex(item?.id)
-                          }
-                        />
-                      ) : (
-                        <MdArrowDropDownCircle
-                          size={24}
-                          className=" hover:bg-gray-300 rounded-full"
-                          onClick={() =>
-                            activeIndex === item.id
-                              ? setActiveIndex('')
-                              : setActiveIndex(item?.id)
-                          }
-                        />
-                      )}
                     </div>
-
                     <p className=" text-sm line-clamp-2">{item?.description}</p>
-
-                    {activeIndex === item.id && (
-                      <div className="flex flex-row justify-between items-center">
-                        <Link
-                          href={`/dashboard/products/${item.id}`}
-                          className="hover:bg-slate-400 rounded-full h-10 w-10"
-                        >
-                          <MdEdit size={24} className="self-center" />
-                        </Link>
-                        <Link
-                          href={`/dashboard/products/${item.id}`}
-                          className="hover:bg-slate-400 rounded-full  h-10 w-10"
-                        >
-                          <MdAnalytics size={24} />
-                        </Link>
-                        <Link
-                          href={`/dashboard/products/${item.id}`}
-                          className="hover:bg-slate-400 rounded-full  h-10 w-10"
-                        >
-                          <MdRemoveRedEye size={24} />
-                        </Link>
-                        <button className="hover:bg-slate-400 rounded-full  h-10 w-10">
-                          <MdDelete
-                            size={24}
-                            onClick={() => {
-                              let text = 'confirm delete';
-                              if (confirm(text) == true) {
-                                handleDeleteCourse(item.id);
-                              } else {
-                                text = 'You canceled!';
-                              }
-                            }}
-                          />
-                        </button>
-                        <button className="hover:bg-slate-400 rounded-full h-10 w-10">
-                          <MdMoreHoriz size={24} />
-                        </button>
-                      </div>
-                    )}
                   </div>
                 </td>
 
@@ -193,7 +129,7 @@ function ProductsPage() {
                       {new Date(item?.created_at).toDateString()}
                     </span>
                     <span className="text-yellow-500 h-5 w-full rounded-lg self-center">
-                      {item.status}
+                      {item?.status}
                     </span>
                   </div>
                 </td>
@@ -215,6 +151,36 @@ function ProductsPage() {
                         : setActiveIndex(item.id)
                     }
                   />
+                  {activeIndex == item.id && (
+                    <div className="flex flex-col gap-2 absolute bg-slate-700">
+                      <Link
+                        href={{
+                          pathname: `/dashboard/products/${activeIndex}`,
+                        }}
+                      >
+                        <button
+                          onClick={() => {}}
+                          className="flex flex-row items-center gap-2 text-green-500 hover:bg-slate-400 hover:cursor-pointer"
+                        >
+                          <MdRemoveRedEye /> open
+                        </button>
+                      </Link>
+
+                      <button
+                        onClick={() => {}}
+                        className="flex flex-row items-center gap-2 text-green-500 hover:bg-slate-400 hover:cursor-pointer"
+                      >
+                        <MdEdit /> edit title
+                      </button>
+
+                      <button
+                        onClick={() => {}}
+                        className="flex flex-row gap-2 items-center text-red-500 hover:bg-slate-400 hover:cursor-pointer"
+                      >
+                        <MdDelete /> delete
+                      </button>
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}

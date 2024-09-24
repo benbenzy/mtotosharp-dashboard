@@ -1,17 +1,9 @@
 import React from 'react';
-import Image from 'next/image';
 
 function TransactionComponent({ item }: any) {
   return (
     <tr className="mt-2">
       <td className="flex flex-row gap-2 p-2 items-center">
-        <Image
-          height={30}
-          width={30}
-          alt=""
-          src={'/noavatar.png'}
-          className="rounded-full object-cover"
-        />
         {item?.checkout_request_id}
       </td>
 

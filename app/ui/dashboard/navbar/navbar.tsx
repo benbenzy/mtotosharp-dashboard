@@ -36,7 +36,7 @@ function Navbar() {
               </button>
             ) : (
               <Link
-                href={'/login'}
+                href={'/signin'}
                 className="bg-gray-600 cursor-pointer text-slate-200 rounded-xg w-20 align-middle items-center justify-center flex hover:bg-gray-400"
               >
                 login

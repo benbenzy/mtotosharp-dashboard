@@ -1,14 +1,18 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./ui/globals.css";
-import { AuthProvider } from "./context/authContext";
-import Providers from "./helpers/providers";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './ui/globals.css';
+import { AuthProvider } from './context/authContext';
+import Providers from './helpers/providers';
+import Footer from '@/components/ui/Footer';
+import { Suspense } from 'react';
+import { Toaster } from '@/components/ui/Toasts/toaster';
+import Navbar from '@/components/ui/Navbar';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "Mtotosharp",
-  description: "admin forum",
+  title: 'Mtotosharp',
+  description: 'admin forum',
 };
 
 export default function RootLayout({
@@ -20,7 +24,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            {children}
+
+            <Suspense>
+              <Toaster />
+            </Suspense>
+          </AuthProvider>
         </Providers>
       </body>
     </html>

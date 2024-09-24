@@ -20,12 +20,12 @@ function PolicyPage() {
   });
   return (
     <div className="w-full items-center flex-1 flex flex-col">
-      <div>
+      <nav>
         <h1 className=" font-extrabold">
           Mtoto<span className="text-red-700">Sharp</span>{' '}
           <span className="text-yellow-600">Foundation</span>
         </h1>
-      </div>
+      </nav>
       <h1 className="font-bold">Terms and Service Use</h1>
 
       {Array.isArray(terms) &&

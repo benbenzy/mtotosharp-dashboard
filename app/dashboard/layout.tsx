@@ -5,15 +5,17 @@ import Footer from '../ui/dashboard/footer/footer';
 
 function Layout({ children }: React.PropsWithChildren) {
   return (
-    <div className="flex-row flex">
-      <div className="flex-4 bg-slate-800 p-8">
-        <Sidebar />
+    <div>
+      <div className="flex-row flex">
+        <div className="flex-4 bg-slate-800 p-8">
+          <Sidebar />
+        </div>
+        <div className="flex-1 p-8">
+          <Navbar />
+          {children}
+        </div>
       </div>
-      <div className="flex-1 p-8">
-        <Navbar />
-        {children}
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 }

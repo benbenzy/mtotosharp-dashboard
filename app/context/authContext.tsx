@@ -17,7 +17,7 @@ type AuthContextType = {
   logOut: any;
 };
 
-const AuthContext = createContext<AuthContextType | any>(null);
+const AuthContext = createContext<AuthContextType | any>(undefined);
 export const AuthProvider = ({ children }: { children: any }) => {
   const [currentUser, setCurrentUser] = useState<
     AuthContextType['currentUser'] | any

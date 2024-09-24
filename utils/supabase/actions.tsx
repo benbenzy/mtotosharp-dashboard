@@ -19,10 +19,7 @@ export async function supabaseLogin(formData: FormData) {
     console.log('error login', error.message);
     //redirect('/error');
   }
-  console.log('logged in user', user?.user);
-
   revalidatePath('/', 'layout');
-  redirect('/dashboard');
 }
 
 export async function supabaseSignup(formData: FormData) {
