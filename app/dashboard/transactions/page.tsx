@@ -13,7 +13,10 @@ function TransactionsPage() {
   const { data: transactions } = useQuery({
     queryKey: ['transactions'],
     queryFn: async () => {
-      const res = await supabase.from('transactions').select('*');
+      const res = await supabase
+        .from('transactions')
+        .select('*')
+        .order('created_at', { ascending: false });
       return res.data;
     },
   });

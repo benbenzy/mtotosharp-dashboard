@@ -19,7 +19,11 @@ function Transaction() {
   const { data: transactions } = useQuery({
     queryKey: ['transactions'],
     queryFn: async () => {
-      const res = await supabase.from('transactions').select('*').limit(10);
+      const res = await supabase
+        .from('transactions')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(10);
       return res.data;
     },
   });
