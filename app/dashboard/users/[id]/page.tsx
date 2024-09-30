@@ -97,9 +97,30 @@ function SingleUserPage() {
       }
     }
   }
+  const DisplayCard = ({
+    title,
+    description,
+  }: {
+    title: string;
+    description: string;
+  }) => {
+    return (
+      <div className="card bg-primary text-neutral-content w-60 mt-5 ">
+        <div className="card-body items-center text-center">
+          <h2 className="card-title">{title}</h2>
+          <p>{description}</p>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div>
+      <div className="flex flex-row justify-between">
+        <DisplayCard title="Purchases" description="Ksh 300" />{' '}
+        <DisplayCard title="Purchases" description="Ksh 300" />{' '}
+        <DisplayCard title="Purchases" description="Ksh 300" />
+      </div>
       <div className="flex flex-row gap-8">
         <div className="flex flex-col w-2/5 mt-5 bg-slate-800 p-5">
           <div className="w-full h-3/4 mb-5 overflow-hidden rounded-md relative">

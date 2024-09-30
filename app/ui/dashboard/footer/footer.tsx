@@ -2,7 +2,7 @@ import React from 'react';
 
 function Footer() {
   return (
-    <div className="flex flex-row justify-between p-4">
+    <div className="flex flex-row justify-between p-4 mt-10">
       <div className="font-semibold text-slate-400 text-xs">
         Mtoto<span className="text-red-400">Sharp</span>{' '}
         <span className="text-yellow-600">Foundation </span>

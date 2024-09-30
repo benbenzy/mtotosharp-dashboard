@@ -40,15 +40,7 @@ export async function POST(req: Request) {
       console.log(`error creating user${error}`);
       return NextResponse.json(`error creating user${error}`, { status: 500 });
     }
-    // const user = await prisma.users.create({
-    //   data: {
-    //     email,
-    //     phone,
-    //     full_name: firstName + ' ' + lastName,
-    //     group: role,
-    //     userName: firstName,
-    //   },
-    // });
+
     return NextResponse.json(user, { status: 200 });
   } catch (error) {
     console.log('error creating user', error);

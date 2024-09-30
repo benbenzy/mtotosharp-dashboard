@@ -13,9 +13,9 @@ function Layout({ children }: React.PropsWithChildren) {
         <div className="flex-1 p-8">
           <Navbar />
           {children}
+          <Footer />
         </div>
       </div>
-      <Footer />
     </div>
   );
 }
