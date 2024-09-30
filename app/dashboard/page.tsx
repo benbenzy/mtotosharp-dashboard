@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import Card from '../ui/dashboard/card/card';
-import Rightbar from '../ui/dashboard/rightbar/rightbar';
 import Transaction from '../ui/dashboard/transaction/transaction';
 import Chart from '../ui/dashboard/chart/chart';
 import { MdAnalytics, MdSupervisedUserCircle } from 'react-icons/md';
@@ -22,7 +21,6 @@ function DashBoardPage() {
   lastWeekStart.setDate(today.getDate() - 14);
   const lastWeekEnd = new Date(today);
   lastWeekEnd.setDate(today.getDate() - 7);
-
   const currentWeekStart = new Date(today);
   currentWeekStart.setDate(today.getDate() - 7);
 
@@ -148,15 +146,10 @@ function DashBoardPage() {
         .eq('status', 'success')
         .gte('created_at', currentWeekStart.toISOString())
         .lt('created_at', today.toISOString());
-      let totalAmount = 0;
-      if (data) {
-        for (let i = 0; i < data?.length; i++) {
-          totalAmount += Number(data[i]?.amount);
-        }
-      }
-      return totalAmount;
+      return data;
     },
   });
+
   const { data: lastWeekRevenue } = useQuery({
     queryKey: ['lastWeekRevenue'],
     queryFn: async () => {
@@ -166,15 +159,27 @@ function DashBoardPage() {
         .eq('status', 'success')
         .gte('created_at', lastWeekStart.toISOString())
         .lt('created_at', lastWeekEnd.toISOString());
-      let totalAmount = 0;
-      if (data) {
-        for (let i = 0; i < data?.length; i++) {
-          totalAmount += Number(data[i]?.amount);
-        }
-      }
-      return totalAmount;
+      return data;
     },
   });
+  const totalLastWeek = () => {
+    let totalAmount = 0;
+    if (lastWeekRevenue) {
+      for (let i = 0; i < lastWeekRevenue?.length; i++) {
+        totalAmount += Number(lastWeekRevenue[i]?.amount);
+      }
+    }
+    return totalAmount;
+  };
+  const totalThisWeek = () => {
+    let totalAmount = 0;
+    if (currentWeekRevenue) {
+      for (let i = 0; i < currentWeekRevenue?.length; i++) {
+        totalAmount += Number(currentWeekRevenue[i]?.amount);
+      }
+    }
+    return totalAmount;
+  };
 
   function calculatePercentageChange(oldValue: any, newValue: any) {
     if (oldValue === 0) return 0; // handle case where old value is 0
@@ -208,8 +213,8 @@ function DashBoardPage() {
             icon={<MdAnalytics size={24} />}
             title="revenue"
             range={`${calculatePercentageChange(
-              lastWeekRevenue,
-              currentWeekRevenue
+              totalLastWeek(),
+              totalThisWeek()
             )}%`}
             comment="last 30 days"
             value={totalRevenue ?? 0}
