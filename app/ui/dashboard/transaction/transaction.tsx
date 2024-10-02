@@ -1,32 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import Image from 'next/image';
 import React from 'react';
 import TransactionComponent from './transactionComponent';
-import { createClient } from '@/utils/supabase/client';
 import Link from 'next/link';
+import { createClient } from '@/utils/supabase/server';
+import { getAllTransactions } from '@/utils/supabase/queries';
 
-interface transaction {
-  id: string;
-  created_at: Date;
-  amount: string;
-  status: string;
-  user_id: string;
-}
-
-function Transaction() {
+async function Transaction() {
   const supabase = createClient();
-  const { data: transactions } = useQuery({
-    queryKey: ['transactions'],
-    queryFn: async () => {
-      const res = await supabase
-        .from('transactions')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(10);
-      return res.data;
-    },
-  });
+  const [transactions] = await Promise.all([getAllTransactions(supabase)]);
   return (
     <div>
       <div className="flex flex-row justify-between items-center">

@@ -21,11 +21,7 @@ function Card({ title, icon, value, range, comment }: props) {
               range?.startsWith('-') ? 'text-red-500' : 'text-green-600'
             }`}
           >
-            {range?.startsWith('-')
-              ? `-${range}`
-              : range === '0'
-              ? '0'
-              : `+${range}`}
+            {range}
           </span>
           {comment}
         </span>
