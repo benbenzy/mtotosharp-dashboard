@@ -16,6 +16,16 @@ export interface UserProps {
   isMember: boolean;
   isActive: boolean;
 }
+const Card = (item: any) => {
+  return (
+    <div className="card bg-primary text-primary-content w-96">
+      <div className="card-body">
+        <h2 className="card-title">{item?.tite}</h2>
+        <p>{item?.subTitle}</p>
+      </div>
+    </div>
+  );
+};
 
 function SingleUserPage() {
   const supabase = createClient();
@@ -109,6 +119,9 @@ function SingleUserPage() {
         <div className="card-body items-center text-center">
           <h2 className="card-title">{title}</h2>
           <p>{description}</p>
+          <div className="card-actions justify-end">
+            <button className="btn">open</button>
+          </div>
         </div>
       </div>
     );
@@ -116,11 +129,6 @@ function SingleUserPage() {
 
   return (
     <div>
-      <div className="flex flex-row justify-between">
-        <DisplayCard title="Purchases" description="Ksh 300" />{' '}
-        <DisplayCard title="Purchases" description="Ksh 300" />{' '}
-        <DisplayCard title="Purchases" description="Ksh 300" />
-      </div>
       <div className="flex flex-row gap-8">
         <div className="flex flex-col w-2/5 mt-5 bg-slate-800 p-5">
           <div className="w-full h-3/4 mb-5 overflow-hidden rounded-md relative">
@@ -212,7 +220,6 @@ function SingleUserPage() {
             />
 
             <label htmlFor="email" className="mt-2 font-semibold capitalize">
-              {' '}
               Role
             </label>
             <select
@@ -232,9 +239,9 @@ function SingleUserPage() {
               <option value={'PUBLISHERS'}>PUBLISHERS</option>
               <option value={'EDITOR'}>EDITOR</option>
               <option value={'AGENT'}>AGENT</option>
+              <option value={'TEST'}>TEST</option>
             </select>
             <label htmlFor="email" className="mt-2 font-semibold capitalize">
-              {' '}
               status
             </label>
 
@@ -252,14 +259,14 @@ function SingleUserPage() {
               <option>active</option>
               <option>block</option>
             </select>
-            <button className="w-full bg-green-900 rounded-md mt-5 p-2">
-              update
-            </button>
+            <button className="w-full bg-green-900 rounded-md mt-5 p-2"></button>
           </form>
         </div>
       </div>
-      <div>
-        <h1>Wallet</h1>
+      <div className="flex flex-row justify-between">
+        <DisplayCard title="Purchases" description="Ksh 300" />{' '}
+        <DisplayCard title="Purchases" description="Ksh 300" />{' '}
+        <DisplayCard title="Purchases" description="Ksh 300" />
       </div>
     </div>
   );
