@@ -22,20 +22,14 @@ export default function Sliders({ products, user }: Props) {
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
   const currentPath = usePathname();
 
-  const handleStripeCheckout = async (price: {
-    id: string;
-    amount: Number;
-  }) => {
-    setPriceIdLoading(price.id);
-
+  const handleStripeCheckout = async (id: string) => {
+    setPriceIdLoading(id);
     if (!user) {
       setPriceIdLoading(undefined);
       return router.push('/signin/signup');
     }
-
     setPriceIdLoading(undefined);
   };
-  const subscription = false;
 
   if (!products?.length) {
     return (
@@ -103,10 +97,12 @@ export default function Sliders({ products, user }: Props) {
                         variant="slim"
                         type="button"
                         loading={priceIdLoading === `${product?.price}`}
-                        onClick={() => {}}
+                        onClick={() => {
+                          handleStripeCheckout(`${product?.id}`);
+                        }}
                         className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
                       >
-                        {subscription ? 'Manage' : 'Subscribe'}
+                        Subscribe
                       </Button>
                     </div>
                   </div>

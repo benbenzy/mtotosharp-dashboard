@@ -1,10 +1,9 @@
-import { NextRequest} from "next/server"
+import { NextRequest, NextResponse, userAgent} from "next/server"
 import { updateSession } from "./utils/supabase/middleware"
 
 
 export async function middleware(request:NextRequest) {
-  
- 
+  const { ua } = userAgent(request)
   return updateSession(request)
 }
 

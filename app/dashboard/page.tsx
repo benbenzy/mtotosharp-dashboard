@@ -61,13 +61,13 @@ export default async function DashBoardPage() {
         <div className="flex flex-row justify-between gap-5">
           <Card
             icon={<MdSupervisedUserCircle size={24} />}
-            title="users"
+            title="Users"
             range={`${calculatePercentageChange(
               usersLastWeek,
               usersThisWeek
             )}%`}
             comment="last 7 days"
-            value={allUsersCount ?? ''}
+            value={allUsersCount ?? 0}
           />
           <Card
             icon={<MdSupervisedUserCircle size={24} />}

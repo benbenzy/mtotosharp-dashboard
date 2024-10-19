@@ -6,11 +6,16 @@ interface props {
   value?: number | string;
   range?: string;
   comment?: string;
+  active?: boolean;
+  click?: () => void;
 }
 
-function Card({ title, icon, value, range, comment }: props) {
+function Card({ title, icon, value, range, comment, active, click }: props) {
   return (
-    <div className="flex flex-row bg-slate-800 gap-2 rounded-md hover:bg-slate-600 p-5 cursor-pointer w-full ">
+    <div
+      onClick={click}
+      className="flex flex-row bg-slate-800 gap-2 rounded-md hover:bg-slate-600 p-5 cursor-pointer w-full "
+    >
       {icon}
       <div className="flex flex-col gap-2 items-center ">
         <span className=" semi-bold text-lg capitalize">{title}</span>

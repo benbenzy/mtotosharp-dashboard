@@ -1,6 +1,7 @@
 'use client';
 import RemoteImage from '@/app/ui/dashboard/remoteImage/RemoteImage';
 import { createClient } from '@/utils/supabase/client';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
@@ -25,7 +26,7 @@ interface CourseDetailsProps {
 
 const CourseDeatilsPage: FC<CourseDetailsProps> = () => {
   const pathname = usePathname();
-  const supabase = createClient();
+  const supabase: SupabaseClient = createClient();
   const [image, setImage] = useState<File | any>(null);
   const [course, setCourse] = useState<any>();
   const [onEdit, setOnEdit] = useState(false);
@@ -116,7 +117,20 @@ const CourseDeatilsPage: FC<CourseDetailsProps> = () => {
     isSuccess: deletesuccess,
   } = useMutation({
     mutationFn: async () => {
-      await axios.delete(`/api/courses/${id}/chapters/${selectedChapter}`);
+      console.log('deleting chapter');
+      const { data, error } = await supabase
+        .from('chapters')
+        .delete()
+        .eq('id', selectedChapter)
+        .select();
+      if (error) {
+        console.log('failed to delete chapter', error.message);
+        throw new Error(`failed to delete chapter ${error.message}`);
+      }
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['course', id] });
     },
   });
   const {
