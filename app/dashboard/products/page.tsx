@@ -3,7 +3,12 @@ import Pagination from '@/app/ui/dashboard/pagination/pagination';
 import RemoteImage from '@/app/ui/dashboard/remoteImage/RemoteImage';
 import Search from '@/app/ui/dashboard/search/search';
 import { createClient } from '@/utils/supabase/client';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  dataTagSymbol,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import axios from 'axios';
 import Link from 'next/link';
 import React, { Suspense, useState } from 'react';
@@ -11,21 +16,25 @@ import {
   MdAnalytics,
   MdArrowDropDownCircle,
   MdArrowForwardIos,
+  MdCheck,
+  MdCheckBox,
   MdDelete,
   MdEdit,
   MdMoreHoriz,
   MdMoreVert,
+  MdOutlineCheckBox,
   MdRemoveRedEye,
 } from 'react-icons/md';
 
 function ProductsPage() {
   const [activeIndex, setActiveIndex] = useState('');
   const supabase = createClient();
+  const queryClient = useQueryClient();
 
   const {
     data: courses,
     isLoading,
-    isError,
+    isError: loadingError,
   } = useQuery({
     queryKey: ['courses'],
     queryFn: async () => {
@@ -59,6 +68,50 @@ function ProductsPage() {
       await axios.delete(`/api/products/${id}`);
     },
   });
+  const {
+    mutate: handleLiveStatus,
+    isError: handleLiveCorseError,
+    isPending: handleLiveCoursePending,
+    isSuccess: handleLiveCourseSucces,
+  } = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: boolean }) => {
+      const updateStatus = !status;
+      const { data, error } = await supabase
+        .from('courses')
+        .update({ is_live: updateStatus })
+        .eq('id', id);
+      if (error) {
+        console.log('failed to update status', error.message);
+      }
+      return data;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['courses'] }),
+  });
+  const {
+    mutate: handlePublishStatus,
+    isError: publishCourseError,
+    isPending: publishCoursePending,
+    isSuccess: publishCourseSucces,
+  } = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: boolean }) => {
+      const updateStatus = !status;
+      const { data, error } = await supabase
+        .from('courses')
+        .update({ published: updateStatus })
+        .eq('id', id);
+      if (error) {
+        console.log('failed to update status', error.message);
+      }
+      return data;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['courses'] }),
+  });
+  const isloading =
+    handleLiveCoursePending || publishCoursePending || deleteCoursePending;
+  const isError =
+    publishCourseError || handleLiveCorseError || deleteCorseError;
+  const isSuccess =
+    publishCourseSucces || handleLiveCourseSucces || deleteCourseSucces;
   return (
     <div className="bg-slate-800 rounded-md p-5 mt-5">
       <div className="flex flex-row items-center justify-between">
@@ -72,21 +125,21 @@ function ProductsPage() {
         </Link>
       </div>
       {isLoading && <div>loading ...</div>}
-      {isError && <div> error loading</div>}
-      {deleteCorseError && (
+      {loadingError && <div> error loading</div>}
+      {isError && (
         <div className="toast">
           <div className="alert alert-error">
             <span>failed to delete item</span>
           </div>
         </div>
       )}
-      {deleteCoursePending && (
-        <progress className="progress w-56">processing delete...</progress>
+      {isloading && (
+        <progress className="progress w-56">processing ...</progress>
       )}
-      {deleteCourseSucces && (
+      {isSuccess && (
         <div className="toast">
           <div className="alert alert-success">
-            <span>course deleted</span>
+            <span>success</span>
           </div>
         </div>
       )}
@@ -132,7 +185,7 @@ function ProductsPage() {
                       {new Date(item?.created_at).toDateString()}
                     </span>
                     <span className="text-yellow-500 h-5 w-full rounded-lg self-center">
-                      {item?.status}
+                      {item?.published ? 'published' : 'not published'}
                     </span>
                   </div>
                 </td>
@@ -144,36 +197,60 @@ function ProductsPage() {
                     </span>
                   </div>
                 </td>
-                <td>{item.price}</td>
                 <td>
-                  <MdMoreVert
-                    size={25}
-                    onClick={() =>
-                      activeIndex === item.id
-                        ? setActiveIndex('')
-                        : setActiveIndex(item.id)
-                    }
-                  />
-                  {activeIndex == item.id && (
-                    <div className="flex flex-col gap-2 absolute bg-slate-700">
+                  <div className=" flex flex-col gap-2">
+                    <span className="">
+                      {item?.is_live ? 'live' : 'offline'}
+                    </span>
+                    <span className="text-yellow-500 h-5 w-full rounded-lg self-center">
+                      {item.price}
+                    </span>
+                  </div>
+                </td>
+                <td>
+                  <div className="dropdown dropdown-left">
+                    <MdMoreVert size={25} tabIndex={0} role="button" />
+
+                    <ul
+                      tabIndex={0}
+                      className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
+                    >
                       <Link
                         href={{
-                          pathname: `/dashboard/products/${activeIndex}`,
+                          pathname: `/dashboard/products/${item.id}`,
                         }}
                       >
                         <button
                           onClick={() => {}}
-                          className="flex flex-row items-center gap-2 text-green-500 hover:bg-slate-400 hover:cursor-pointer"
+                          className="flex flex-row items-center gap-2 text-slate-300 hover:bg-slate-400 hover:cursor-pointer"
                         >
                           <MdRemoveRedEye /> open
                         </button>
                       </Link>
 
                       <button
-                        onClick={() => {}}
-                        className="flex flex-row items-center gap-2 text-green-500 hover:bg-slate-400 hover:cursor-pointer"
+                        onClick={() => {
+                          handleLiveStatus({
+                            id: item.id,
+                            status: item?.is_live,
+                          });
+                        }}
+                        className="flex flex-row gap-2 items-center text-slate-300 hover:bg-slate-400 hover:cursor-pointer"
                       >
-                        <MdEdit /> edit title
+                        {item?.is_live ? <MdCheckBox /> : <MdOutlineCheckBox />}
+                        {item?.is_live ? 'Go Offline' : 'Go Live'}
+                      </button>
+                      <button
+                        onClick={() => {
+                          handlePublishStatus({
+                            id: item.id,
+                            status: item.published,
+                          });
+                        }}
+                        className="flex flex-row gap-2 items-center text-slate-300 hover:bg-slate-400 hover:cursor-pointer"
+                      >
+                        {item?.published ? <MdCheck /> : <MdCheckBox />}
+                        {item?.published ? 'revoke publish' : 'publish'}
                       </button>
 
                       <button
@@ -182,8 +259,8 @@ function ProductsPage() {
                       >
                         <MdDelete /> delete
                       </button>
-                    </div>
-                  )}
+                    </ul>
+                  </div>
                 </td>
               </tr>
             ))}
