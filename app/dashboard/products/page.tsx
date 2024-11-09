@@ -208,7 +208,7 @@ function ProductsPage() {
                   </div>
                 </td>
                 <td>
-                  <div className="dropdown dropdown-left">
+                  <div className="dropdown dropdown-hover dropdown-left">
                     <MdMoreVert size={25} tabIndex={0} role="button" />
 
                     <ul
