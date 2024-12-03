@@ -3,7 +3,7 @@ import { updateSession } from "./utils/supabase/middleware"
 
 
 export async function middleware(request:NextRequest) {
-  const { ua } = userAgent(request)
+  
   return updateSession(request)
 }
 
@@ -16,6 +16,6 @@ export const config = {
      * - favicon.ico (favicon file)
      * Feel free to modify this pattern to include more paths.
      */
-    '/((?!_next/static|_next/image|favicon.ico|login|message|legal|signin|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|login|.well-known|assetlinks.json|message|legal|signin|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
